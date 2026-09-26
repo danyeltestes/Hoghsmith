@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#182118" />
-<title>Painel de Hoghsmith — HOG.25.09#2</title>
+<title>Painel de Hoghsmith — HOG.25.09#3</title>
 <style>
 :root{
   --bg:#0f1510;--surface:#151d16;--surface2:#1b261c;--surface3:#223024;
@@ -45,7 +45,7 @@ input,select{width:100%;background:#101812;color:white;border:1px solid #324235;
   <header class="topbar">
     <div class="brandline">
       <div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div>
-      <div class="version">HOG.25.09#2</div>
+      <div class="version">HOG.25.09#3</div>
     </div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="logoutBtn" style="margin-left:auto">Sair</button></div>
   </header>
   <main>
@@ -54,19 +54,17 @@ input,select{width:100%;background:#101812;color:white;border:1px solid #324235;
       <div class="card">
         <div class="row between"><div><h3>🗺️ Mapa de Hoghsmith</h3><p>Seed configurada e pontos da cidade por coordenadas.</p></div><span class="seedbox">171983…3441</span></div>
         <div class="cityMapMini" onclick="go('map')" style="margin-top:12px;cursor:pointer">
-          <div class="pin" style="left:12%;top:22%">🏠 Carlos</div><div class="pin" style="left:54%;top:47%">🚉 Estação Central</div><div class="pin" style="left:62%;top:15%">🌾 Farm</div><div class="pin" style="left:23%;top:68%">🏘️ Centro</div>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:26px;color:#e7eee2"><div><div style="font-size:34px">🗺️</div><b>Mapa real da seed</b><div style="font-size:11px;color:#d9e3d7;margin-top:6px">Cadastre os locais reais do Realm por coordenadas X/Y/Z.</div></div></div>
         </div>
         <div class="legend"><span>🌳 terreno</span><span>📍 pontos cadastrados</span><span>📏 distâncias</span></div>
       </div>
       <div class="grid">
-        <div class="stat"><b id="statResidents">5</b><span>moradores</span></div><div class="stat"><b id="statPlaces">5</b><span>locais cadastrados</span></div>
+        <div class="stat"><b id="statResidents">5</b><span>moradores</span></div><div class="stat"><b id="statPlaces">0</b><span>locais cadastrados</span></div>
         <div class="stat"><b>2</b><span>bairros</span></div><div class="stat"><b>3</b><span>projetos ativos</span></div>
       </div>
       <div class="sectionTitle"><h3>Atividade recente</h3><span>Hoje</span></div>
       <div class="card">
-        <div class="activity"><div class="acticon">📍</div><div><b>Carlos cadastrou Casa de Carlos</b><span>Entrada principal registrada no mapa.</span></div></div>
-        <div class="activity"><div class="acticon">🚉</div><div><b>Estação Central adicionada</b><span>Ponto principal da rede ferroviária.</span></div></div>
-        <div class="activity"><div class="acticon">🏗️</div><div><b>Novo projeto coletivo</b><span>Expansão da Linha Norte em planejamento.</span></div></div>
+        <div class="activity"><div class="acticon">🗺️</div><div><b>Versão #3 pronta para o mapa real</b><span>Cadastre os primeiros locais reais do Realm.</span></div></div>
       </div>
     </section>
 
@@ -74,11 +72,11 @@ input,select{width:100%;background:#101812;color:white;border:1px solid #324235;
       <div class="hero"><div class="eyebrow">Mapa</div><h2>Explore Hoghsmith.</h2><p>Arraste, aproxime e compare pontos cadastrados.</p></div>
       <div class="mapShell">
         <canvas id="worldCanvas"></canvas>
-        <div class="mapHud"><div class="pill">🌱 Seed <b>1719830761368393441</b></div><div class="pill" id="zoomLabel">100%</div></div>
+        <div class="mapHud"><div class="pill">🌱 Seed <b>1719830761368393441</b></div><div style="display:flex;gap:6px"><div class="pill">Bedrock 26.52</div><div class="pill" id="zoomLabel">100%</div></div></div>
         <div class="mapControls"><button class="iconBtn" onclick="zoomMap(1.22)">＋</button><button class="iconBtn" onclick="zoomMap(.82)">−</button><button class="iconBtn" onclick="resetMap()">⌂</button></div>
         <div class="routeCard" id="routeCard"><b>📏 Medição rápida</b><div class="muted">Escolha dois locais abaixo para traçar uma linha.</div></div>
       </div>
-      <div class="mapNote"><strong>Seed oficial configurada:</strong> 1719830761368393441 • Bedrock 26.52. Nesta #2 o mapa mantém a camada cartográfica local para coordenadas, marcadores e rotas. O renderizador fiel do worldgen 26.52 exige um motor Bedrock/WASM externo ou arquivos do mundo; por isso o painel não finge que o terreno procedural abaixo é o terreno real.</div>
+      <div class="mapNote"><strong>Seed oficial configurada:</strong> 1719830761368393441 • Bedrock 26.52. Nesta #3 os dados reais da cidade já usam coordenadas X/Y/Z, categorias, rotas e Firebase. A camada visual do terreno está neutra: o HTML não inventa biomas. Para exibir o terreno 100% fiel da seed dentro do painel ainda é necessário conectar um renderizador Bedrock compatível ou importar tiles do mapa real.</div>
       <div class="card">
         <div class="row between"><h3>Traçar entre locais</h3><span style="font-size:10px;color:var(--muted)">linha reta</span></div>
         <div class="formRow"><label class="field">Origem<select id="routeFrom"></select></label><label class="field">Destino<select id="routeTo"></select></label></div>
@@ -88,7 +86,7 @@ input,select{width:100%;background:#101812;color:white;border:1px solid #324235;
 
     <section class="page" id="places">
       <div class="hero"><div class="eyebrow">Locais</div><h2>Coordenadas da cidade.</h2><p>Casas, farms, estações, vilas, portais e pontos importantes.</p></div>
-      <div class="tabs"><button class="chip active">Todos</button><button class="chip">Casas</button><button class="chip">Farms</button><button class="chip">Transporte</button><button class="chip">Descobertas</button></div>
+      <div class="tabs" id="categoryTabs"></div>
       <div class="card" id="placesList"></div>
     </section>
 
@@ -104,13 +102,11 @@ input,select{width:100%;background:#101812;color:white;border:1px solid #324235;
 
     <section class="page" id="profile">
       <div class="profileHeader"><div class="avatar"><canvas id="profileAvatar" width="8" height="8"></canvas></div><h2 id="profileName">Morador</h2><p id="profileSub">Morador de Hoghsmith</p></div>
-      <div class="profileStats"><div><b>4</b><span>LOCAIS</span></div><div><b>2</b><span>PROJETOS</span></div><div><b>1</b><span>BAIRRO</span></div></div>
-      <div class="sectionTitle"><h3>Residência</h3><span>coordenada oficial</span></div><div class="card"><div class="place"><div class="placeIcon">🏠</div><div><h4>Casa de Carlos</h4><small>X 120 • Y 68 • Z -90</small></div><span class="tag">porta</span></div></div>
-      <div class="sectionTitle"><h3>Meus projetos</h3><span>2 ativos</span></div>
-      <div class="project"><div class="projectTop"><div><b>🏗️ Ampliação da residência</b></div><small>70%</small></div><div class="bar"><i style="width:70%"></i></div></div>
-      <div class="project"><div class="projectTop"><div><b>🌾 Farm automática</b></div><small>25%</small></div><div class="bar"><i style="width:25%"></i></div></div>
+      <div class="profileStats"><div><b id="profilePlaceCount">0</b><span>LOCAIS</span></div><div><b>0</b><span>PROJETOS</span></div><div><b>—</b><span>BAIRRO</span></div></div>
+      <div class="sectionTitle"><h3>Meus locais</h3><span>Firebase</span></div><div class="card" id="myPlacesCard"><p>Nenhum local cadastrado ainda.</p></div>
       <div class="sectionTitle"><h3>Identidade</h3><span>pixel art leve</span></div>
       <div class="card"><div class="row between"><div><h3>Minha cabeça 8×8</h3><p>A imagem é montada pixel a pixel e ocupa pouquíssimo espaço no banco.</p></div><button class="iconBtn" onclick="openAvatarEditor()">✎</button></div></div>
+      <div class="card" id="adminCard" style="display:none"><div class="row between"><div><h3>🛡️ Administração</h3><p>Categorias, identidade e configurações globais.</p></div><button class="iconBtn" onclick="openAdmin()">⚙</button></div></div>
     </section>
   </main>
 
@@ -123,12 +119,14 @@ input,select{width:100%;background:#101812;color:white;border:1px solid #324235;
   </nav>
 </div>
 
-<div class="modalWrap" id="addModal" onclick="modalBg(event,'addModal')"><div class="modal"><div class="handle"></div><h3>Adicionar em Hoghsmith</h3><div class="actions"><button class="action" onclick="openPlaceForm()">📍<b>Novo local</b><small>Casa, farm, estação, portal…</small></button><button class="action">🏗️<b>Novo projeto</b><small>Projeto pessoal ou coletivo</small></button><button class="action">👨‍🌾<b>Novo villager</b><small>Nome, profissão e trocas</small></button><button class="action">🏘️<b>Novo bairro</b><small>Organize regiões da cidade</small></button><button class="action">🚉<b>Nova rota</b><small>Estrada ou ferrovia cadastrada</small></button><button class="action">🏳️<b>Nova bandeira</b><small>Identidade pixelada</small></button></div><button class="secondary" onclick="closeModal('addModal')">Fechar</button></div></div>
-<div class="modalWrap" id="placeModal" onclick="modalBg(event,'placeModal')"><div class="modal"><div class="handle"></div><h3>Novo local</h3><label class="field">Nome<input id="pName" placeholder="Ex.: Casa da Andressa"></label><label class="field">Tipo<select id="pType"><option value="house">🏠 Residência</option><option value="farm">🌾 Farm</option><option value="station">🚉 Estação</option><option value="village">🏘️ Vila</option><option value="portal">🌀 Portal</option><option value="mine">⛏️ Mina</option><option value="landmark">📍 Ponto de referência</option></select></label><div class="formRow"><label class="field">X<input id="pX" type="number" placeholder="0"></label><label class="field">Z<input id="pZ" type="number" placeholder="0"></label></div><label class="field">Y (opcional)<input id="pY" type="number" placeholder="64"></label><button class="primary" onclick="savePlace()">Salvar local</button><button class="secondary" onclick="closeModal('placeModal')">Cancelar</button></div></div>
+<div class="modalWrap" id="addModal" onclick="modalBg(event,'addModal')"><div class="modal"><div class="handle"></div><h3>Adicionar em Hoghsmith</h3><div class="actions"><button class="action" onclick="openPlaceForm()">📍<b>Novo local</b><small>Casa, farm, estação, portal…</small></button><button class="action">🏗️<b>Novo projeto</b><small>Projeto pessoal ou coletivo</small></button><button class="action">👨‍🌾<b>Novo villager</b><small>Nome, profissão e trocas</small></button><button class="action">🏘️<b>Novo bairro</b><small>Organize regiões da cidade</small></button><button class="action">🚉<b>Nova rota</b><small>Estrada ou ferrovia cadastrada</small></button><button class="action" onclick="openBannerEditor()">🏳️<b>Nova bandeira</b><small>Identidade pixelada</small></button></div><button class="secondary" onclick="closeModal('addModal')">Fechar</button></div></div>
+<div class="modalWrap" id="placeModal" onclick="modalBg(event,'placeModal')"><div class="modal"><div class="handle"></div><h3>Novo local</h3><label class="field">Nome<input id="pName" placeholder="Ex.: Casa da Andressa"></label><label class="field">Categoria<select id="pType"></select></label><div class="formRow"><label class="field">X<input id="pX" type="number" placeholder="0"></label><label class="field">Z<input id="pZ" type="number" placeholder="0"></label></div><label class="field">Y (opcional)<input id="pY" type="number" placeholder="64"></label><label class="field">Status<select id="pStatus"><option value="concluido">Concluído</option><option value="construcao">Em construção</option><option value="planejado">Planejado</option></select></label><label class="field">Descrição<input id="pDescription" placeholder="Opcional"></label><button class="primary" onclick="savePlace()">Salvar local</button><button class="secondary" onclick="closeModal('placeModal')">Cancelar</button></div></div>
 <div class="modalWrap" id="avatarModal" onclick="modalBg(event,'avatarModal')"><div class="modal"><div class="handle"></div><h3>Editar cabeça 8×8</h3><div class="notice">Toque nos quadrados para pintar. Nesta #2 a matriz 8×8 é sincronizada com o Firestore no perfil autenticado.</div><div id="pixelEditor" style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px;max-width:320px;margin:16px auto"></div><input type="color" id="pixelColor" value="#8d6748" style="height:46px;padding:5px"><button class="primary" onclick="saveAvatar()">Salvar cabeça</button><button class="secondary" onclick="closeModal('avatarModal')">Cancelar</button></div></div>
 <script>
 const seed='1719830761368393441';
-const iconMap={house:'🏠',farm:'🌾',station:'🚉',village:'🏘️',portal:'🌀',mine:'⛏️',landmark:'📍'};
+const defaultCategories=[{id:'house',name:'Casa',icon:'🏠'},{id:'farm',name:'Farm',icon:'🌾'},{id:'biome',name:'Bioma',icon:'🌳'},{id:'construction',name:'Construção',icon:'🏗️'},{id:'building',name:'Edifício',icon:'🏢'},{id:'project',name:'Projeto',icon:'📐'},{id:'transport',name:'Transporte',icon:'🚉'},{id:'portal',name:'Portal',icon:'⭕️'},{id:'mine',name:'Mineração',icon:'⛏️'},{id:'landmark',name:'Ponto de interesse',icon:'📍'}];
+let categories=[...defaultCategories];
+let iconMap=Object.fromEntries(categories.map(c=>[c.id,c.icon]));
 const residents=[
  {name:'Carlos',area:'Centro',palette:['#3b2a20','#6a472e','#d4a77d','#1f1f1f','#6f94b7']},
  {name:'Everton',area:'Centro',palette:['#211d1b','#46352b','#b88c68','#283b55','#d1d6da']},
@@ -136,23 +134,25 @@ const residents=[
  {name:'Miguel',area:'Centro',palette:['#1c1b1a','#534334','#c8966e','#4e744b','#d7b45e']},
  {name:'Andressa',area:'Floresta',palette:['#39281e','#80563b','#d5a782','#874f57','#ece2d5']}
 ];
-let defaultPlaces=[
- {id:'casa-carlos',name:'Casa de Carlos',type:'house',x:120,y:68,z:-90,owner:'Carlos'},
- {id:'estacao-central',name:'Estação Central',type:'station',x:420,y:64,z:160,owner:'Cidade'},
- {id:'farm-ferro',name:'Farm de Ferro',type:'farm',x:710,y:72,z:-310,owner:'Everton'},
- {id:'vila-oeste',name:'Vila Oeste',type:'village',x:-640,y:70,z:520,owner:'Exploração'},
- {id:'portal-centro',name:'Portal Central',type:'portal',x:330,y:65,z:40,owner:'Cidade'}
-];
-let places=JSON.parse(localStorage.getItem('hoghsmith_places')||'null')||defaultPlaces;
+let defaultPlaces=[];
+
+let places=JSON.parse(localStorage.getItem('hoghsmith_places')||'null')||[];
 let avatar=JSON.parse(localStorage.getItem('hoghsmith_avatar')||'null')||['#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#8d6748','#8d6748','#8d6748','#8d6748','#8d6748','#8d6748','#5c3827','#8d6748','#8d6748','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#8d6748','#8d6748','#e0b18b','#222','#e0b18b','#e0b18b','#e0b18b','#222','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#6b3b2d','#6b3b2d','#6b3b2d','#6b3b2d','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#d2a37e','#d2a37e','#d2a37e','#d2a37e','#d2a37e','#d2a37e','#d2a37e','#d2a37e'];
 
 function go(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='map') setTimeout(resizeCanvas,80)}
 function openAdd(){document.getElementById('addModal').classList.add('show')}function closeModal(id){document.getElementById(id).classList.remove('show')}function modalBg(e,id){if(e.target.id===id)closeModal(id)}
 function openPlaceForm(){closeModal('addModal');document.getElementById('placeModal').classList.add('show')}
-function savePlace(){let name=pName.value.trim(); if(!name)return alert('Digite um nome para o local.'); let item={id:'p'+Date.now(),name,type:pType.value,x:+pX.value||0,y:+pY.value||64,z:+pZ.value||0,owner:'Cidade'}; places.push(item);persistPlaces();closeModal('placeModal');pName.value='';renderPlaces();populateRoutes();drawMap();}
+function savePlace(){let name=pName.value.trim(); if(!name)return alert('Digite um nome para o local.'); let item={id:'p'+Date.now(),name,type:pType.value,x:+pX.value||0,y:+pY.value||64,z:+pZ.value||0,owner:'Cidade',status:pStatus.value,description:pDescription.value.trim()}; places.push(item);persistPlaces();closeModal('placeModal');pName.value='';renderPlaces();populateRoutes();drawMap();}
 function persistPlaces(){localStorage.setItem('hoghsmith_places',JSON.stringify(places));document.getElementById('statPlaces').textContent=places.length}
-function renderPlaces(){let box=document.getElementById('placesList');box.innerHTML=places.map(p=>`<div class="place"><div class="placeIcon">${iconMap[p.type]||'📍'}</div><div><h4>${esc(p.name)}</h4><small>X ${p.x} • Y ${p.y} • Z ${p.z}</small></div><span class="tag">${esc(p.owner||'Cidade')}</span></div>`).join('')}
+function renderPlaces(){let box=document.getElementById('placesList');box.innerHTML=places.length?places.map(p=>`<div class="place"><div class="placeIcon">${iconMap[p.type]||'📍'}</div><div><h4>${esc(p.name)}</h4><small>X ${p.x} • Y ${p.y} • Z ${p.z}${p.status?' • '+esc(p.status):''}</small></div><span class="tag">${esc(p.owner||'Cidade')}</span></div>`).join(''):'<p>Nenhum local cadastrado ainda.</p>';renderMyPlaces();}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function refreshCategories(){iconMap=Object.fromEntries(categories.map(c=>[c.id,c.icon]));let sel=document.getElementById('pType');if(sel)sel.innerHTML=categories.map(c=>`<option value="${c.id}">${c.icon} ${esc(c.name)}</option>`).join('');let tabs=document.getElementById('categoryTabs');if(tabs)tabs.innerHTML='<button class="chip active">Todos</button>'+categories.map(c=>`<button class="chip">${c.icon} ${esc(c.name)}</button>`).join('');renderAdminCategories();}
+function renderMyPlaces(){let box=document.getElementById('myPlacesCard');if(!box)return;let mine=window.activeUser?places.filter(p=>p.ownerUid===window.activeUser.uid):[];document.getElementById('profilePlaceCount').textContent=mine.length;box.innerHTML=mine.length?mine.map(p=>`<div class="place"><div class="placeIcon">${iconMap[p.type]||'📍'}</div><div><h4>${esc(p.name)}</h4><small>X ${p.x} • Y ${p.y} • Z ${p.z}</small></div></div>`).join(''):'<p>Nenhum local cadastrado ainda.</p>';}
+function openAdmin(){document.getElementById('adminModal').classList.add('show');renderAdminCategories()}
+function renderAdminCategories(){let box=document.getElementById('adminCategories');if(!box)return;box.innerHTML=categories.map(c=>`<div class="place"><div class="placeIcon">${c.icon}</div><div><h4>${esc(c.name)}</h4><small>${esc(c.id)}</small></div></div>`).join('')}
+function openBannerEditor(){closeModal('addModal');document.getElementById('bannerModal').classList.add('show');drawBannerPreview()}
+function drawBannerPreview(){let el=document.getElementById('bannerPreview');if(!el)return;let b=bannerBase.value,p=bannerPattern.value,c=bannerColor.value;el.style.background=b;let css='';if(p==='stripe_h')css=`linear-gradient(to bottom,transparent 35%,${c} 35% 65%,transparent 65%),${b}`;if(p==='stripe_v')css=`linear-gradient(to right,transparent 35%,${c} 35% 65%,transparent 65%),${b}`;if(p==='cross')css=`linear-gradient(to right,transparent 42%,${c} 42% 58%,transparent 58%),linear-gradient(to bottom,transparent 42%,${c} 42% 58%,transparent 58%),${b}`;if(p==='border')css=`linear-gradient(${c},${c}) padding-box`;if(p==='diag')css=`linear-gradient(135deg,transparent 42%,${c} 42% 58%,transparent 58%),${b}`;if(p==='center')css=`radial-gradient(circle at center,${c} 0 28%,transparent 29%),${b}`;el.style.background=css;if(p==='border')el.style.boxShadow=`inset 0 0 0 16px ${c}`;else el.style.boxShadow='none'}
+['bannerBase','bannerPattern','bannerColor'].forEach(id=>setTimeout(()=>{let e=document.getElementById(id);if(e)e.addEventListener('input',drawBannerPreview)},0));
 function drawAvatar(c,colors){let ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;colors.forEach((col,i)=>{ctx.fillStyle=col;ctx.fillRect(i%8,Math.floor(i/8),1,1)})}
 function renderPeople(){peopleGrid.innerHTML=residents.map((r,i)=>`<div class="person"><div class="avatar"><canvas id="av${i}" width="8" height="8"></canvas></div><b><span class="statusdot"></span>${r.name}</b><small>${r.area}</small></div>`).join('');residents.forEach((r,i)=>{let arr=makeAvatar(r.palette,i);drawAvatar(document.getElementById('av'+i),arr)})}
 function makeAvatar(p,k){let a=Array(64).fill(p[2]);for(let x=0;x<8;x++){a[x]=p[0];a[8+x]=x===0||x===7?p[0]:p[1]}a[25]=a[30]=p[3];a[43]=a[44]=p[0];for(let i=48;i<64;i++)a[i]=i%3===k%3?p[4]:p[2];return a}
@@ -161,7 +161,7 @@ function saveAvatar(){localStorage.setItem('hoghsmith_avatar',JSON.stringify(ava
 
 let canvas=document.getElementById('worldCanvas'),ctx=canvas.getContext('2d');let view={x:0,z:0,scale:.23};let dragging=false,last={x:0,y:0},route=null;
 function hash(x,z){let n=Math.sin(x*12.9898+z*78.233+Number(seed.slice(-8))*.000001)*43758.5453;return n-Math.floor(n)}
-function terrain(x,z){let v=(hash(Math.floor(x/180),Math.floor(z/180))*.55+hash(Math.floor(x/430),Math.floor(z/430))*.45);if(v<.19)return '#537f91';if(v<.28)return '#d4c48a';if(v<.52)return '#79955d';if(v<.73)return '#58784d';if(v<.88)return '#48683f';return '#89917a'}
+function terrain(x,z){return ((Math.floor(x/500)+Math.floor(z/500))%2===0)?'#405a43':'#466049'}
 function resizeCanvas(){let r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;canvas.width=Math.floor(r.width*d);canvas.height=Math.floor(r.height*d);ctx.setTransform(d,0,0,d,0,0);drawMap()}
 function worldToScreen(x,z){let r=canvas.getBoundingClientRect();return {x:r.width/2+(x-view.x)*view.scale,y:r.height/2+(z-view.z)*view.scale}}
 function screenToWorld(x,y){let r=canvas.getBoundingClientRect();return {x:view.x+(x-r.width/2)/view.scale,z:view.z+(y-r.height/2)/view.scale}}
@@ -177,7 +177,7 @@ function populateRoutes(){routeFrom.innerHTML=routeTo.innerHTML=places.map(p=>`<
 function drawRoute(){let a=places.find(p=>p.id===routeFrom.value),b=places.find(p=>p.id===routeTo.value);if(!a||!b||a.id===b.id)return alert('Escolha dois locais diferentes.');route={a,b};let d=Math.hypot(b.x-a.x,b.z-a.z),dx=b.x-a.x,dz=b.z-a.z;routeCard.innerHTML=`<b>📏 ${esc(a.name)} → ${esc(b.name)}</b><div class="muted">${Math.round(d)} blocos em linha reta • ΔX ${dx>=0?'+':''}${dx} • ΔZ ${dz>=0?'+':''}${dz}</div>`;view.x=(a.x+b.x)/2;view.z=(a.z+b.z)/2;let span=Math.max(Math.abs(dx),Math.abs(dz),350);let r=canvas.getBoundingClientRect();view.scale=Math.max(.08,Math.min(.7,Math.min(r.width,r.height)*.65/span));zoomLabel.textContent=Math.round(view.scale/.23*100)+'%';drawMap()}
 function clearRoute(){route=null;routeCard.innerHTML='<b>📏 Medição rápida</b><div class="muted">Escolha dois locais abaixo para traçar uma linha.</div>';drawMap()}
 window.addEventListener('resize',resizeCanvas);
-renderPlaces();renderPeople();drawAvatar(profileAvatar,avatar);populateRoutes();persistPlaces();setTimeout(resizeCanvas,80);
+refreshCategories();renderPlaces();renderPeople();drawAvatar(profileAvatar,avatar);populateRoutes();persistPlaces();setTimeout(resizeCanvas,80);
 </script>
 
 <script type="module">
@@ -194,7 +194,7 @@ const profileMap={
   'perfil.miguel@gmail.com':{name:'Miguel',area:'Centro'},
   'perfil.andressa@gmail.com':{name:'Andressa',area:'Floresta'}
 };
-let activeUser=null, unsubPlaces=null;
+let activeUser=null, unsubPlaces=null, unsubCategories=null; window.activeUser=null;
 const gate=document.getElementById('loginGate'), status=document.getElementById('loginStatus'), dot=document.getElementById('syncDot');
 function setSync(ok,text){dot.className='syncdot '+(ok?'ok':'bad');document.getElementById('accountLabel').textContent=text}
 loginBtn.addEventListener('click',async()=>{status.textContent='Entrando…';try{await signInWithEmailAndPassword(auth,loginEmail.value.trim(),loginPassword.value);status.textContent=''}catch(e){status.textContent='Não foi possível entrar. Confira e-mail e senha.'}});
@@ -202,10 +202,10 @@ loginPassword.addEventListener('keydown',e=>{if(e.key==='Enter')loginBtn.click()
 logoutBtn.addEventListener('click',()=>signOut(auth));
 
 onAuthStateChanged(auth,async user=>{
- if(!user){activeUser=null;gate.classList.remove('hidden');setSync(false,'Firebase desconectado');return}
+ if(!user){activeUser=null;window.activeUser=null;document.getElementById('adminCard').style.display='none';gate.classList.remove('hidden');setSync(false,'Firebase desconectado');return}
  const email=(user.email||'').toLowerCase(), profile=profileMap[email];
  if(!profile){await signOut(auth);status.textContent='Esta conta não está vinculada a um morador de Hoghsmith.';return}
- activeUser={uid:user.uid,email,...profile};gate.classList.add('hidden');
+ activeUser={uid:user.uid,email,...profile,role:email==='perfil.carlos@gmail.com'?'admin':'member'}; window.activeUser=activeUser;gate.classList.add('hidden');document.getElementById('adminCard').style.display=activeUser.role==='admin'?'block':'none';
  document.getElementById('homeName').textContent=profile.name;document.getElementById('profileName').textContent=profile.name;document.getElementById('profileSub').textContent=`Morador de Hoghsmith • ${profile.area}`;
  setSync(true,`${profile.name} • sincronizado`);
  const pref=doc(db,'players',user.uid), snap=await getDoc(pref);
@@ -214,23 +214,45 @@ onAuthStateChanged(auth,async user=>{
  if(unsubPlaces)unsubPlaces();
  unsubPlaces=onSnapshot(collection(db,'locations'),qs=>{
    const remote=[];qs.forEach(d=>remote.push({id:d.id,...d.data()}));
-   if(remote.length){window.places=remote;places=remote;renderPlaces();populateRoutes();persistPlaces();drawMap()}
-   else seedInitialPlaces();
+   window.places=remote;places=remote;renderPlaces();populateRoutes();persistPlaces();drawMap();
  },()=>setSync(false,`${profile.name} • erro de sincronização`));
+ if(unsubCategories)unsubCategories();
+ unsubCategories=onSnapshot(collection(db,'categories'),qs=>{
+   const arr=[];qs.forEach(d=>arr.push({id:d.id,...d.data()}));
+   categories=arr.length?arr:[...defaultCategories];refreshCategories();drawMap();
+ },()=>{});
 });
-async function seedInitialPlaces(){for(const p of window.defaultPlaces||defaultPlaces){await setDoc(doc(db,'locations',p.id),p,{merge:true})}}
 
 const oldSavePlace=window.savePlace;
 window.savePlace=async function(){
  if(!activeUser)return alert('Faça login primeiro.');
  const name=pName.value.trim();if(!name)return alert('Digite um nome para o local.');
- const item={id:'p'+Date.now(),name,type:pType.value,x:+pX.value||0,y:+pY.value||64,z:+pZ.value||0,owner:activeUser.name,ownerUid:activeUser.uid,createdAt:Date.now()};
+ const item={id:'p'+Date.now(),name,type:pType.value,x:+pX.value||0,y:+pY.value||64,z:+pZ.value||0,owner:activeUser.name,ownerUid:activeUser.uid,status:pStatus.value,description:pDescription.value.trim(),createdAt:Date.now()};
  try{await setDoc(doc(db,'locations',item.id),item);closeModal('placeModal');pName.value=''}catch(e){alert('Erro ao salvar no Firebase.')}
 };
 window.saveAvatar=async function(){
  if(!activeUser)return alert('Faça login primeiro.');
  try{await setDoc(doc(db,'players',activeUser.uid),{avatar:window.avatar||avatar,updatedAt:serverTimestamp()},{merge:true});drawAvatar(profileAvatar,window.avatar||avatar);closeModal('avatarModal');setSync(true,`${activeUser.name} • sincronizado`)}catch(e){alert('Erro ao salvar a cabeça no Firebase.')}
 };
+window.addCategory=async function(){
+ if(!activeUser||activeUser.role!=='admin')return alert('Apenas o administrador pode criar categorias.');
+ const name=newCatName.value.trim(),icon=newCatIcon.value.trim()||'📍';if(!name)return alert('Digite o nome da categoria.');
+ const id=name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||('cat-'+Date.now());
+ try{await setDoc(doc(db,'categories',id),{name,icon,order:Date.now(),enabled:true});newCatName.value='';newCatIcon.value=''}catch(e){alert('Erro ao salvar categoria no Firebase.')}
+};
+window.seedDefaultCategories=async function(){
+ if(!activeUser||activeUser.role!=='admin')return alert('Apenas o administrador pode publicar categorias.');
+ try{for(const c of defaultCategories){await setDoc(doc(db,'categories',c.id),c,{merge:true})}alert('Categorias padrão publicadas.')}catch(e){alert('Erro ao publicar categorias.')}
+};
+window.saveBanner=async function(){
+ if(!activeUser)return alert('Faça login primeiro.');
+ const name=bannerName.value.trim();if(!name)return alert('Digite um nome para a bandeira.');
+ const id='b'+Date.now(),data={name,baseColor:bannerBase.value,layers:[{pattern:bannerPattern.value,color:bannerColor.value}],createdBy:activeUser.uid,createdByName:activeUser.name,createdAt:Date.now()};
+ try{await setDoc(doc(db,'banners',id),data);closeModal('bannerModal');bannerName.value='';alert('Bandeira salva.')}catch(e){alert('Erro ao salvar bandeira no Firebase.')}
+};
 </script>
+
+<div class="modalWrap" id="adminModal" onclick="modalBg(event,'adminModal')"><div class="modal"><div class="handle"></div><h3>Administração</h3><div class="notice">Área exclusiva do administrador. As categorias são globais e ficam sincronizadas no Firebase.</div><div class="sectionTitle"><h3>Categorias</h3><span>globais</span></div><div id="adminCategories"></div><label class="field">Nome da nova categoria<input id="newCatName" placeholder="Ex.: Monumento"></label><label class="field">Ícone<input id="newCatIcon" placeholder="Ex.: 🗿"></label><button class="primary" onclick="addCategory()">Adicionar categoria</button><button class="secondary" onclick="seedDefaultCategories()">Publicar categorias padrão no Firebase</button><button class="secondary" onclick="closeModal('adminModal')">Fechar</button></div></div>
+<div class="modalWrap" id="bannerModal" onclick="modalBg(event,'bannerModal')"><div class="modal"><div class="handle"></div><h3>Nova bandeira</h3><div class="notice">Editor leve inspirado nas bandeiras do Minecraft. A bandeira é salva como base + camadas, sem imagem pesada.</div><label class="field">Nome<input id="bannerName" placeholder="Ex.: Hoghsmith"></label><label class="field">Cor base<input id="bannerBase" type="color" value="#ffffff" style="height:46px;padding:5px"></label><label class="field">Padrão<select id="bannerPattern"><option value="stripe_h">Faixa horizontal</option><option value="stripe_v">Faixa vertical</option><option value="cross">Cruz</option><option value="border">Borda</option><option value="diag">Diagonal</option><option value="center">Centro</option></select></label><label class="field">Cor do padrão<input id="bannerColor" type="color" value="#2f7d32" style="height:46px;padding:5px"></label><div id="bannerPreview" style="width:160px;height:100px;margin:14px auto;border:1px solid #39483b;border-radius:8px;overflow:hidden;background:#fff"></div><button class="primary" onclick="saveBanner()">Salvar bandeira</button><button class="secondary" onclick="closeModal('bannerModal')">Cancelar</button></div></div>
 </body>
 </html>
