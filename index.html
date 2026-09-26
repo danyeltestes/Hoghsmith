@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#182118" />
-<title>Painel de Hoghsmith — HOG.25.09#4.5.3</title>
+<title>Painel de Hoghsmith — HOG.25.09#4.5.4</title>
 <style>
 :root{--bg:#0f1510;--surface:#151d16;--surface2:#1b261c;--surface3:#223024;--text:#f2f6f0;--muted:#aab5aa;--green:#8bcf6a;--lime:#b5df77;--line:#2c3a2d;--danger:#e07c77;--gold:#d9c46c;--shadow:0 18px 50px rgba(0,0,0,.28);--radius:24px}
 *{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 50% -15%,#223025 0,#0f1510 38%,#0b100c 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh;display:flex;justify-content:center}.app{width:100%;max-width:520px;min-height:100vh;background:rgba(9,13,10,.35);position:relative;overflow:hidden}
@@ -64,12 +64,140 @@ main{padding:8px 14px 104px}.hero{padding:16px 2px 10px}.hero h2{font-size:27px}
 .mapTapActions .closeWide45{display:none!important}
 @media(max-width:380px){.mapTapCard{width:min(230px,calc(100% - 20px));padding:10px}.mapTapActions button{min-width:76px;font-size:8px}}
 
+
+/* ===== 4.5.4 — reconstrução mobile da área do mapa ===== */
+.mapPage45{
+  margin:0 -16px!important;
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+  padding:0 10px 92px!important;
+}
+.mapFull45{
+  height:clamp(430px,64dvh,640px)!important;
+  min-height:430px!important;
+  border:1px solid #2d3d30!important;
+  border-radius:22px!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.30)!important;
+  overflow:hidden!important;
+}
+.mapTop45{left:10px!important;right:10px!important;top:10px!important}
+.mapControls45{
+  right:10px!important;
+  bottom:12px!important;
+  gap:7px!important;
+}
+.mapControls45 button{
+  width:42px!important;height:42px!important;border-radius:14px!important
+}
+.mapDock45{display:none!important}
+
+/* Barra funcional fixa, FORA do mapa e acima da navegação principal */
+.mapBottomBar454{
+  position:fixed;
+  z-index:48;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(76px + env(safe-area-inset-bottom));
+  width:min(520px,100%);
+  height:78px;
+  padding:7px 12px 8px;
+  background:rgba(12,18,14,.97);
+  border-top:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(18px);
+  display:grid;
+  grid-template-columns:1fr 1fr 72px 1fr 1fr;
+  gap:4px;
+  box-shadow:0 -10px 30px rgba(0,0,0,.24);
+}
+.mapBottomBar454 button{
+  border:0;
+  background:transparent;
+  color:#9fab9f;
+  min-width:0;
+  border-radius:14px;
+  font-size:9px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  align-items:center;
+  justify-content:center;
+  padding:5px 2px;
+}
+.mapBottomBar454 button .mi454{font-size:19px;line-height:1}
+.mapBottomBar454 button.primary454{
+  color:#edf4e9;
+  background:#18241b;
+}
+.mapBottomBar454 .fabGap454{pointer-events:none}
+body.mapMode454 .fab{
+  bottom:calc(86px + env(safe-area-inset-bottom))!important;
+  width:60px;height:60px;border-radius:19px;
+}
+body:not(.mapMode454) .mapBottomBar454{display:none!important}
+
+/* Modos de rota/território ficam visíveis acima da barra fixa, nunca atrás dela */
+.routeGuideBar,.territoryEditorBar,.routeEditorBar{
+  position:fixed!important;
+  z-index:58!important;
+  left:50%!important;
+  right:auto!important;
+  transform:translateX(-50%)!important;
+  width:min(496px,calc(100% - 24px))!important;
+  bottom:calc(162px + env(safe-area-inset-bottom))!important;
+  border-radius:16px!important;
+  padding:10px 11px!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.42)!important;
+}
+.routeGuideBar{
+  grid-template-columns:auto minmax(0,1fr) auto!important;
+}
+.routeGuideBar b,.territoryEditorBar b,.routeEditorBar b{font-size:11px!important}
+.routeGuideBar small,.territoryEditorBar small,.routeEditorBar small{font-size:9px!important}
+.routeEditorActions{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+.routeEditorActions button{flex:1 1 auto!important;min-width:80px!important}
+
+/* Popup de ponto/local continua pequeno e ancorado dentro do mapa */
+.mapTapCard{
+  z-index:32!important;
+  max-width:245px!important;
+}
+.mapTapActions button{min-width:76px!important}
+
+/* Pequena legenda fixa abaixo do mapa, sem texto técnico excessivo */
+.mapMiniStatus454{
+  min-height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 5px 0;
+  color:var(--muted);
+  font-size:9px;
+}
+.mapMiniStatus454 b{color:#dce7d8;font-weight:700}
+.mapMiniStatus454 .sync454{
+  display:inline-flex;align-items:center;gap:5px;white-space:nowrap
+}
+.mapMiniStatus454 .sync454:before{
+  content:"";width:6px;height:6px;border-radius:50%;background:#7ad66f
+}
+
+@media(max-width:390px){
+  .mapPage45{padding-left:7px!important;padding-right:7px!important}
+  .mapFull45{height:61dvh!important;min-height:410px!important;border-radius:19px!important}
+  .mapBottomBar454{padding-left:7px;padding-right:7px;grid-template-columns:1fr 1fr 68px 1fr 1fr}
+  .mapBottomBar454 button{font-size:8px}
+  .mapBottomBar454 button .mi454{font-size:18px}
+  .routeGuideBar,.territoryEditorBar,.routeEditorBar{width:calc(100% - 14px)!important}
+}
+
 </style>
 </head>
 <body>
 <div class="loginGate" id="loginGate"><div class="loginCard"><div class="loginLogo">🟩</div><div class="eyebrow">PAINEL DE HOGHSMITH</div><h2>Entrar na cidade</h2><p>Use sua conta individual. O painel carrega somente os dados reais sincronizados no Firebase.</p><label class="field">E-mail<input id="loginEmail" type="email" autocomplete="email" placeholder="Perfil.carlos@gmail.com"></label><label class="field">Senha<input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••"></label><button class="primary" id="loginBtn">Entrar</button><div class="loginStatus" id="loginStatus"></div></div></div>
 <div class="app">
-<header class="topbar"><div class="brandline"><div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div><div class="version">HOG.25.09#4.5.3</div></div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="notifBtn" class="notifBtn" onclick="openNotifications44()">🔔 <span id="notifCount44">0</span></button><button id="logoutBtn">Sair</button></div></header>
+<header class="topbar"><div class="brandline"><div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div><div class="version">HOG.25.09#4.5.4</div></div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="notifBtn" class="notifBtn" onclick="openNotifications44()">🔔 <span id="notifCount44">0</span></button><button id="logoutBtn">Sair</button></div></header>
 <main>
 <section class="page active" id="home"><div class="hero"><div class="eyebrow">Realm Bedrock • Base real</div><h2>Boa noite, <span id="homeName">morador</span>.</h2><p>Nesta versão, o painel mostra somente o que existe de verdade no banco.</p></div>
 <div class="centerCard"><div class="eyebrow">Centro oficial de Hoghsmith</div><div class="coords" id="homeCoords">X 139 • Z -32</div><div class="subcoords" id="homeAltitude">Altitude de referência: Y 104</div></div>
@@ -77,39 +205,84 @@ main{padding:8px 14px 104px}.hero{padding:16px 2px 10px}.hero h2{font-size:27px}
 <div class="sectionTitle"><h3>Locais cadastrados</h3><span id="placesSummary">0 no Firebase</span></div><div class="card" id="homePlaces"><div class="empty"><span class="big">📍</span>Nenhum local cadastrado ainda.</div></div>
 </section>
 <section class="page mapPage45" id="map">
-<div class="seedMapShell mapFull45" id="seedMapShell">
-  <div class="seedTiles" id="seedTiles"></div>
-  <svg class="territorySvg" id="territorySvg44"></svg>
-  <svg class="routeSvg" id="routeSvg"></svg>
-  <canvas class="chunkCanvas" id="chunkCanvas"></canvas>
-  <div class="seedOverlay" id="seedOverlay"></div>
-  <div class="crosshair"></div>
+  <div class="seedMapShell mapFull45" id="seedMapShell">
+    <div class="seedTiles" id="seedTiles"></div>
+    <svg class="territorySvg" id="territorySvg44"></svg>
+    <svg class="routeSvg" id="routeSvg"></svg>
+    <canvas class="chunkCanvas" id="chunkCanvas"></canvas>
+    <div class="seedOverlay" id="seedOverlay"></div>
+    <div class="crosshair"></div>
 
-  <div class="mapTopHud mapTop45">
-    <button class="mapGlassBtn45 search45" onclick="openMapSearch45()">⌕ <span>Buscar</span></button>
-    <div class="mapBadge mapCoordHud" id="liveCoords">X 139 • Z -32</div>
+    <div class="mapTopHud mapTop45">
+      <button class="mapGlassBtn45 search45" onclick="openMapSearch45()">⌕ <span>Buscar</span></button>
+      <div class="mapBadge mapCoordHud" id="liveCoords">X 139 • Z -32</div>
+    </div>
+
+    <div class="mapLoading" id="mapLoading">Carregando mapa…</div>
+
+    <div class="mapControls2 mapControls45">
+      <button type="button" onclick="seedZoom(1)" aria-label="Aproximar">＋</button>
+      <button type="button" onclick="seedZoom(-1)" aria-label="Afastar">−</button>
+    </div>
+
+    <div class="mapTapCard" id="mapTapCard">
+      <button type="button" class="mapTapClose452" onclick="closeTapCard()" aria-label="Fechar">×</button>
+      <b id="tapCoords">X 0 • Z 0</b>
+      <small id="tapInfo">Coordenada selecionada.</small>
+      <div id="tapTravel"></div>
+      <div class="mapTapActions" id="tapActions">
+        <button onclick="registerTappedPoint()">＋ Cadastrar</button>
+        <button onclick="openTerritoryAtTap45()">▧ Território</button>
+      </div>
+    </div>
+
+    <div class="srOnly45" aria-hidden="true">
+      <span id="mapStatus">Aguardando o mapa.</span>
+      <b id="mapCoords">X 139 • Z -32</b>
+      <span id="mapSeedShort">171983…3441</span>
+      <span id="seedView">1719830761368393441</span>
+      <input id="mapSearch">
+    </div>
   </div>
-  <div class="mapLoading" id="mapLoading">Carregando mapa…</div>
 
-  <div class="mapControls2 mapControls45">
-    <button type="button" onclick="seedZoom(1)" aria-label="Aproximar">＋</button>
-    <button type="button" onclick="seedZoom(-1)" aria-label="Afastar">−</button>
-    <button type="button" onclick="goMapHome()" aria-label="Centro de Hoghsmith">⌂</button>
+  <div class="mapMiniStatus454">
+    <span><b>Mapa de Hoghsmith</b> • toque para selecionar</span>
+    <span class="sync454">Firebase</span>
   </div>
 
-  <div class="mapDock45">
-    <button onclick="openLayers45()"><span>◫</span>Camadas</button>
-    <button class="routeAction45" onclick="startGuidedRoute44()"><span>↗</span>Traçar rota</button>
-    <button onclick="openRoutes()"><span>≋</span>Rotas</button>
+  <div class="routeGuideBar" id="routeGuideBar44">
+    <div class="stepPill" id="routeGuideStep44">1</div>
+    <div><b id="routeGuideTitle44">Selecione o ponto de partida</b><small id="routeGuideInfo44">Toque em um local cadastrado ou em qualquer ponto do mapa.</small></div>
+    <button onclick="cancelGuidedRoute44()">✕</button>
   </div>
 
-  <div class="mapTapCard" id="mapTapCard"><button type="button" class="mapTapClose452" onclick="closeTapCard()" aria-label="Fechar">×</button><b id="tapCoords">X 0 • Z 0</b><small id="tapInfo">Coordenada selecionada.</small><div id="tapTravel"></div><div class="mapTapActions" id="tapActions"><button onclick="registerTappedPoint()">＋ Cadastrar</button><button onclick="openTerritoryAtTap45()">▧ Território</button></div></div>
-  <div class="routeGuideBar" id="routeGuideBar44"><div class="stepPill" id="routeGuideStep44">1</div><div><b id="routeGuideTitle44">Selecione o ponto de partida</b><small id="routeGuideInfo44">Toque em um local cadastrado ou em qualquer ponto do mapa.</small></div><button onclick="cancelGuidedRoute44()">✕</button></div>
-  <div class="territoryEditorBar" id="territoryEditorBar44"><b id="territoryEditorTitle44">Selecionando território</b><small id="territoryEditorInfo44">Toque no mapa.</small><div class="routeEditorActions"><button onclick="undoTerritoryPoint44()">↶ Desfazer</button><button id="finishTerritoryBtn44" onclick="finishTerritorySelection44()">✓ Concluir</button><button onclick="cancelTerritorySelection44()">✕ Cancelar</button></div></div>
-  <div class="routeEditorBar" id="routeEditorBar"><b id="routeEditorTitle">Criando rota</b><small id="routeEditorInfo" style="display:block;color:var(--muted);margin-top:3px">Toque no mapa para adicionar pontos.</small><div class="routeEditorActions"><button onclick="undoRoutePoint()">↶ Desfazer</button><button onclick="finishRouteDraft()">✓ Concluir</button><button onclick="cancelRouteDraft()">✕ Cancelar</button></div></div>
+  <div class="territoryEditorBar" id="territoryEditorBar44">
+    <b id="territoryEditorTitle44">Selecionando território</b>
+    <small id="territoryEditorInfo44">Toque no mapa.</small>
+    <div class="routeEditorActions">
+      <button onclick="undoTerritoryPoint44()">↶ Desfazer</button>
+      <button id="finishTerritoryBtn44" onclick="finishTerritorySelection44()">✓ Concluir</button>
+      <button onclick="cancelTerritorySelection44()">✕ Cancelar</button>
+    </div>
+  </div>
 
-  <div class="srOnly45" aria-hidden="true"><span id="mapStatus">Aguardando o mapa.</span><b id="mapCoords">X 139 • Z -32</b><span id="mapSeedShort">171983…3441</span><span id="seedView">1719830761368393441</span><input id="mapSearch"></div>
-</div>
+  <div class="routeEditorBar" id="routeEditorBar">
+    <b id="routeEditorTitle">Criando rota</b>
+    <small id="routeEditorInfo" style="display:block;color:var(--muted);margin-top:3px">Toque no mapa para adicionar pontos.</small>
+    <div class="routeEditorActions">
+      <button onclick="undoRoutePoint()">↶ Desfazer</button>
+      <button onclick="finishRouteDraft()">✓ Concluir</button>
+      <button onclick="cancelRouteDraft()">✕ Cancelar</button>
+    </div>
+  </div>
+
+  <div class="mapBottomBar454" aria-label="Ferramentas do mapa">
+    <button onclick="openLayers45()"><span class="mi454">◫</span>Camadas</button>
+    <button class="primary454" onclick="startGuidedRoute44()"><span class="mi454">↗</span>Traçar rota</button>
+    <div class="fabGap454"></div>
+    <button onclick="openRoutes()"><span class="mi454">≋</span>Rotas</button>
+    <button onclick="goMapHome()"><span class="mi454">⌂</span>Centro</button>
+  </div>
 </section>
 <section class="page" id="places"><div class="hero"><div class="eyebrow">Locais</div><h2>Coordenadas reais.</h2><p>Somente locais cadastrados por vocês aparecem aqui.</p></div><div class="card" id="placesList"><div class="empty"><span class="big">📍</span>Nenhum local cadastrado ainda.</div></div></section>
 <section class="page" id="city"><div class="hero"><div class="eyebrow">Cidade</div><h2>Moradores de Hoghsmith.</h2><p>Sem bairros, projetos ou informações demonstrativas.</p></div><div class="sectionTitle"><h3>Moradores</h3><span>5 perfis</span></div><div class="people" id="peopleGrid"></div><div class="sectionTitle"><h3>Territórios</h3><span id="territoryCount44">0 cadastrados</span></div><div class="card" id="territoryCityList44"><div class="empty">Nenhum território cadastrado.</div></div><button class="primary" onclick="openTerritoryForm44()">＋ Cadastrar território</button></section>
@@ -158,7 +331,22 @@ const DEFAULT_AVATAR=['#24351f','#24351f','#24351f','#24351f','#24351f','#24351f
 let mapSettings={...DEFAULT_MAP},categories=[...DEFAULT_CATEGORIES],places=[],routes=[],playersByEmail={},avatar=[...DEFAULT_AVATAR],activeUser=null;
 const STRUCTURE_TYPES=[{id:1,name:'Village'},{id:2,name:'Desert Pyramid'},{id:3,name:'Igloo'},{id:4,name:'Jungle Temple'},{id:5,name:'Swamp Hut'},{id:6,name:'Ocean Monument'},{id:7,name:'Woodland Mansion'},{id:8,name:'Buried Treasure'},{id:9,name:'Shipwreck'},{id:10,name:'Pillager Outpost'},{id:11,name:'Ruined Portal'},{id:13,name:'Stronghold'},{id:14,name:'Ancient City'},{id:15,name:'Trial Chamber'},{id:23,name:'Ocean Ruin'},{id:24,name:'Nether Fossil'}];
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function go(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='map')setTimeout(()=>{initSeedMap();seedViewState.z=seedViewState.maxZ;seedViewState.cx=Number(mapSettings.centerX)||0;seedViewState.cz=Number(mapSettings.centerZ)||0;seedTiles.innerHTML='';renderSeedMap(true)},80)}
+function go(id,btn){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+ document.body.classList.toggle('mapMode454',id==='map');
+ window.scrollTo({top:0,behavior:'smooth'});
+ if(id==='map')setTimeout(()=>{
+   initSeedMap();
+   seedViewState.z=seedViewState.maxZ;
+   seedViewState.cx=Number(mapSettings.centerX)||0;
+   seedViewState.cz=Number(mapSettings.centerZ)||0;
+   seedTiles.innerHTML='';
+   closeTapCard();
+   renderSeedMap(true)
+ },80)
+}
 function closeModal(id){document.getElementById(id).classList.remove('show')}function modalBg(e,id){if(e.target.id===id)closeModal(id)}
 function drawAvatar(c,colors){const ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,8,8);(colors?.length===64?colors:DEFAULT_AVATAR).forEach((col,i)=>{ctx.fillStyle=col;ctx.fillRect(i%8,Math.floor(i/8),1,1)})}
 function renderPeople(){const box=document.getElementById('peopleGrid');box.innerHTML=RESIDENTS.map((r,i)=>{const p=playersByEmail[r.email];const isMe=activeUser?.email===r.email;return `<div class="person"><div class="avatar"><canvas id="residentAvatar${i}" width="8" height="8"></canvas></div><b><span class="statusdot ${(p||isMe)?'':'off'}"></span>${esc(r.name)}</b><small>${esc(p?.civicTitle||r.civicTitle||'Morador')} • ${(p||isMe)?'perfil sincronizado':'avatar padrão'}</small></div>`}).join('');RESIDENTS.forEach((r,i)=>{const p=playersByEmail[r.email];const colors=(activeUser?.email===r.email&&Array.isArray(avatar)&&avatar.length===64)?avatar:(Array.isArray(p?.avatar)&&p.avatar.length===64?p.avatar:DEFAULT_AVATAR);drawAvatar(document.getElementById('residentAvatar'+i),colors)})}
