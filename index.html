@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#182118" />
+<title>Painel de Hoghsmith — HOG.25.09#2</title>
+<style>
+:root{
+  --bg:#0f1510;--surface:#151d16;--surface2:#1b261c;--surface3:#223024;
+  --text:#f2f6f0;--muted:#aab5aa;--green:#8bcf6a;--green2:#5ea14a;--lime:#b5df77;
+  --line:#2c3a2d;--danger:#e07c77;--gold:#d9c46c;--blue:#86b8d8;
+  --shadow:0 18px 50px rgba(0,0,0,.28);--radius:24px;
+}
+*{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 50% -15%,#223025 0,#0f1510 38%,#0b100c 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100vh;display:flex;justify-content:center}.app{width:100%;max-width:520px;min-height:100vh;background:rgba(9,13,10,.35);position:relative;overflow:hidden}
+.topbar{position:sticky;top:0;z-index:40;padding:max(14px,env(safe-area-inset-top)) 18px 12px;background:linear-gradient(180deg,rgba(15,21,16,.97),rgba(15,21,16,.86),rgba(15,21,16,0));backdrop-filter:blur(14px)}
+.brandline{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:11px}.cube{width:40px;height:40px;border-radius:13px;background:linear-gradient(145deg,#6a9f4e,#355c31);display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.11),0 8px 20px rgba(0,0,0,.25);font-size:22px}.brand h1{font-size:16px;margin:0;letter-spacing:.12em}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.version{font-size:10px;color:#d3ddce;background:#1c2a1f;border:1px solid #304033;padding:7px 9px;border-radius:999px}
+main{padding:4px 16px 104px}.page{display:none;animation:fade .22s ease}.page.active{display:block}@keyframes fade{from{opacity:.45;transform:translateY(4px)}to{opacity:1;transform:none}}
+.hero{padding:18px 0 12px}.hero h2{font-size:29px;line-height:1.05;margin:5px 0 8px;letter-spacing:-.035em}.hero p{margin:0;color:var(--muted);font-size:13px}.eyebrow{color:var(--lime);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+.card{background:linear-gradient(160deg,rgba(31,44,33,.95),rgba(20,29,22,.98));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin:12px 0}.card h3{font-size:15px;margin:0}.card p{color:var(--muted);font-size:12px}.row{display:flex;align-items:center;gap:12px}.between{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#18231a;border:1px solid #2b3a2d;padding:13px;border-radius:19px}.stat b{display:block;font-size:20px}.stat span{font-size:11px;color:var(--muted)}
+.cityMapMini{height:180px;border-radius:20px;position:relative;overflow:hidden;background:linear-gradient(130deg,#667c48,#4c6a42 34%,#5c7b50 35%,#466e49 57%,#738354 58%,#5b754c);border:1px solid rgba(255,255,255,.08)}.cityMapMini:before{content:"";position:absolute;inset:-30%;background:repeating-linear-gradient(0deg,transparent 0 23px,rgba(255,255,255,.05) 24px),repeating-linear-gradient(90deg,transparent 0 23px,rgba(0,0,0,.05) 24px);transform:rotate(10deg)}
+.pin{position:absolute;display:flex;align-items:center;gap:5px;font-size:10px;background:rgba(13,18,14,.82);padding:5px 7px;border-radius:999px;border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px)}
+.activity{display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--line)}.activity:first-of-type{border-top:0}.acticon{width:36px;height:36px;border-radius:12px;background:#223326;display:grid;place-items:center}.activity b{font-size:12px}.activity span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.sectionTitle{display:flex;justify-content:space-between;align-items:end;margin:20px 2px 8px}.sectionTitle h3{margin:0;font-size:16px}.sectionTitle span{font-size:11px;color:var(--muted)}
+.mapShell{height:58vh;min-height:430px;border-radius:28px;overflow:hidden;position:relative;border:1px solid #2e3d30;background:#101713;box-shadow:var(--shadow)}#worldCanvas{width:100%;height:100%;display:block;touch-action:none;background:#688257}.mapHud{position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.pill{pointer-events:auto;background:rgba(15,21,16,.84);border:1px solid rgba(255,255,255,.11);backdrop-filter:blur(12px);border-radius:999px;padding:8px 11px;font-size:11px;color:#e7eee2}.mapControls{position:absolute;right:12px;bottom:14px;display:flex;flex-direction:column;gap:8px}.iconBtn{width:42px;height:42px;border:0;border-radius:14px;background:rgba(18,27,20,.92);color:white;font-size:19px;border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 22px rgba(0,0,0,.25)}.routeCard{position:absolute;left:12px;right:66px;bottom:14px;background:rgba(14,21,16,.92);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:10px 12px;backdrop-filter:blur(10px);font-size:11px}.routeCard b{font-size:12px}.routeCard .muted{color:var(--muted);margin-top:3px}.mapNote{font-size:11px;color:var(--muted);line-height:1.45;margin:10px 4px}.mapNote strong{color:#dce8d6}
+.tabs{display:flex;gap:8px;overflow:auto;padding:4px 0 2px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.chip{white-space:nowrap;border:1px solid #314234;background:#1a251c;color:#dbe4d8;padding:9px 12px;border-radius:999px;font-size:11px}.chip.active{background:#ddecce;color:#142014;border-color:#ddecce;font-weight:700}
+.place{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}.place:first-of-type{border-top:0}.placeIcon{width:44px;height:44px;border-radius:15px;background:#223126;display:grid;place-items:center;font-size:21px}.place h4{margin:0;font-size:13px}.place small{color:var(--muted)}.tag{margin-left:auto;font-size:10px;padding:6px 8px;border:1px solid #354637;border-radius:999px;color:#c8d2c6}
+.people{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.person{padding:14px;border-radius:20px;background:#18231a;border:1px solid #29382b}.avatar{width:58px;height:58px;border-radius:15px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);margin-bottom:10px;background:#273326}.avatar canvas{width:100%;height:100%;image-rendering:pixelated}.person b{font-size:13px}.person small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.statusdot{width:7px;height:7px;border-radius:50%;background:#7ad66f;display:inline-block;margin-right:5px}
+.profileHeader{text-align:center;padding:14px 0 6px}.profileHeader .avatar{width:92px;height:92px;margin:0 auto 12px;border-radius:23px}.profileHeader h2{margin:0;font-size:23px}.profileHeader p{margin:4px 0;color:var(--muted);font-size:12px}.profileStats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.profileStats div{padding:12px 8px;background:#18231a;border:1px solid #29382b;border-radius:17px;text-align:center}.profileStats b{font-size:16px;display:block}.profileStats span{font-size:9px;color:var(--muted)}
+.project{padding:12px;border:1px solid #2c3b2d;background:#172119;border-radius:18px;margin-top:9px}.projectTop{display:flex;justify-content:space-between;gap:8px}.project b{font-size:12px}.project small{color:var(--muted)}.bar{height:7px;border-radius:999px;background:#0d140f;margin-top:10px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#6aaa51,#b3dc73);border-radius:999px}
+.fab{position:fixed;z-index:60;left:50%;transform:translateX(-50%);bottom:calc(62px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:19px;background:linear-gradient(145deg,#dbecc8,#aacb87);color:#132013;border:0;font-size:28px;font-weight:300;box-shadow:0 12px 35px rgba(0,0,0,.38)}
+.nav{position:fixed;z-index:50;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;height:76px;padding:9px 16px calc(9px + env(safe-area-inset-bottom));background:rgba(13,18,14,.95);border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(5,1fr);backdrop-filter:blur(18px)}.nav button{border:0;background:transparent;color:#91a093;font-size:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.nav button span{font-size:19px}.nav button.active{color:#e8f1e3}.nav button:nth-child(3){opacity:0;pointer-events:none}
+.modalWrap{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.58);display:none;align-items:flex-end;justify-content:center}.modalWrap.show{display:flex}.modal{width:min(520px,100%);background:#142017;border:1px solid #2a3a2d;border-radius:30px 30px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -20px 60px rgba(0,0,0,.45);max-height:85vh;overflow:auto}.handle{width:42px;height:5px;border-radius:999px;background:#415143;margin:0 auto 14px}.modal h3{margin:0 0 13px}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.action{border:1px solid #304033;background:#1b281e;color:white;border-radius:19px;padding:15px;text-align:left}.action b{display:block;margin-top:8px;font-size:12px}.action small{color:var(--muted);font-size:10px}
+input,select{width:100%;background:#101812;color:white;border:1px solid #324235;border-radius:14px;padding:12px;margin-top:6px;outline:none}.formRow{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.field{font-size:10px;color:#c9d3c5;margin:10px 0}.primary{width:100%;border:0;background:#dbecc8;color:#132013;font-weight:800;padding:13px;border-radius:15px;margin-top:8px}.secondary{width:100%;border:1px solid #344637;background:#1a251c;color:#dbe4d8;padding:12px;border-radius:15px;margin-top:8px}.notice{background:#262b1b;border:1px solid #474c28;border-radius:17px;padding:11px;font-size:10px;color:#ddd9ac;line-height:1.45}.seedbox{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#dce6d8;background:#0f1711;padding:9px 11px;border-radius:13px;border:1px solid #2d3d30;display:inline-block}.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.legend span{font-size:9px;color:#cad5c7;background:#162119;border:1px solid #2a3a2d;padding:5px 7px;border-radius:999px}
+@media(min-width:700px){.app{border-left:1px solid #1d281f;border-right:1px solid #1d281f}}
+
+.loginGate{position:fixed;inset:0;z-index:300;background:radial-gradient(circle at 50% 0,#263628,#0b100c 52%);display:flex;align-items:center;justify-content:center;padding:22px}.loginGate.hidden{display:none}.loginCard{width:min(440px,100%);background:#152019;border:1px solid #304033;border-radius:30px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.45)}.loginLogo{width:66px;height:66px;border-radius:20px;background:linear-gradient(145deg,#78ad59,#355d31);display:grid;place-items:center;font-size:34px;margin-bottom:16px}.loginCard h2{margin:0 0 6px;font-size:28px}.loginCard p{color:var(--muted);font-size:12px;line-height:1.5}.loginStatus{font-size:11px;color:#d9c46c;min-height:18px;margin-top:10px}.accountBar{display:flex;align-items:center;gap:8px;margin-top:10px}.accountBar button{border:1px solid #334637;background:#19241b;color:#dce7d8;border-radius:12px;padding:8px 10px;font-size:10px}.syncdot{width:8px;height:8px;border-radius:50%;background:#d9c46c;display:inline-block}.syncdot.ok{background:#7ad66f}.syncdot.bad{background:#e07c77}
+</style>
+</head>
+<body>
+<div class="loginGate" id="loginGate"><div class="loginCard"><div class="loginLogo">🟩</div><div class="eyebrow">PAINEL DE HOGHSMITH</div><h2>Entrar na cidade</h2><p>Use a conta individual cadastrada no Firebase. O perfil é identificado automaticamente pelo e-mail autenticado.</p><label class="field">E-mail<input id="loginEmail" type="email" autocomplete="email" placeholder="Perfil.carlos@gmail.com"></label><label class="field">Senha<input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••"></label><button class="primary" id="loginBtn">Entrar</button><div class="loginStatus" id="loginStatus"></div></div></div>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brandline">
+      <div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div>
+      <div class="version">HOG.25.09#2</div>
+    </div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="logoutBtn" style="margin-left:auto">Sair</button></div>
+  </header>
+  <main>
+    <section class="page active" id="home">
+      <div class="hero"><div class="eyebrow">Realm Bedrock • Cidade compartilhada</div><h2>Boa noite, <span id="homeName">morador</span>.</h2><p>Seu painel de Hoghsmith já está tomando forma.</p></div>
+      <div class="card">
+        <div class="row between"><div><h3>🗺️ Mapa de Hoghsmith</h3><p>Seed configurada e pontos da cidade por coordenadas.</p></div><span class="seedbox">171983…3441</span></div>
+        <div class="cityMapMini" onclick="go('map')" style="margin-top:12px;cursor:pointer">
+          <div class="pin" style="left:12%;top:22%">🏠 Carlos</div><div class="pin" style="left:54%;top:47%">🚉 Estação Central</div><div class="pin" style="left:62%;top:15%">🌾 Farm</div><div class="pin" style="left:23%;top:68%">🏘️ Centro</div>
+        </div>
+        <div class="legend"><span>🌳 terreno</span><span>📍 pontos cadastrados</span><span>📏 distâncias</span></div>
+      </div>
+      <div class="grid">
+        <div class="stat"><b id="statResidents">5</b><span>moradores</span></div><div class="stat"><b id="statPlaces">5</b><span>locais cadastrados</span></div>
+        <div class="stat"><b>2</b><span>bairros</span></div><div class="stat"><b>3</b><span>projetos ativos</span></div>
+      </div>
+      <div class="sectionTitle"><h3>Atividade recente</h3><span>Hoje</span></div>
+      <div class="card">
+        <div class="activity"><div class="acticon">📍</div><div><b>Carlos cadastrou Casa de Carlos</b><span>Entrada principal registrada no mapa.</span></div></div>
+        <div class="activity"><div class="acticon">🚉</div><div><b>Estação Central adicionada</b><span>Ponto principal da rede ferroviária.</span></div></div>
+        <div class="activity"><div class="acticon">🏗️</div><div><b>Novo projeto coletivo</b><span>Expansão da Linha Norte em planejamento.</span></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="map">
+      <div class="hero"><div class="eyebrow">Mapa</div><h2>Explore Hoghsmith.</h2><p>Arraste, aproxime e compare pontos cadastrados.</p></div>
+      <div class="mapShell">
+        <canvas id="worldCanvas"></canvas>
+        <div class="mapHud"><div class="pill">🌱 Seed <b>1719830761368393441</b></div><div class="pill" id="zoomLabel">100%</div></div>
+        <div class="mapControls"><button class="iconBtn" onclick="zoomMap(1.22)">＋</button><button class="iconBtn" onclick="zoomMap(.82)">−</button><button class="iconBtn" onclick="resetMap()">⌂</button></div>
+        <div class="routeCard" id="routeCard"><b>📏 Medição rápida</b><div class="muted">Escolha dois locais abaixo para traçar uma linha.</div></div>
+      </div>
+      <div class="mapNote"><strong>Seed oficial configurada:</strong> 1719830761368393441 • Bedrock 26.52. Nesta #2 o mapa mantém a camada cartográfica local para coordenadas, marcadores e rotas. O renderizador fiel do worldgen 26.52 exige um motor Bedrock/WASM externo ou arquivos do mundo; por isso o painel não finge que o terreno procedural abaixo é o terreno real.</div>
+      <div class="card">
+        <div class="row between"><h3>Traçar entre locais</h3><span style="font-size:10px;color:var(--muted)">linha reta</span></div>
+        <div class="formRow"><label class="field">Origem<select id="routeFrom"></select></label><label class="field">Destino<select id="routeTo"></select></label></div>
+        <button class="primary" onclick="drawRoute()">Traçar rota</button><button class="secondary" onclick="clearRoute()">Limpar rota</button>
+      </div>
+    </section>
+
+    <section class="page" id="places">
+      <div class="hero"><div class="eyebrow">Locais</div><h2>Coordenadas da cidade.</h2><p>Casas, farms, estações, vilas, portais e pontos importantes.</p></div>
+      <div class="tabs"><button class="chip active">Todos</button><button class="chip">Casas</button><button class="chip">Farms</button><button class="chip">Transporte</button><button class="chip">Descobertas</button></div>
+      <div class="card" id="placesList"></div>
+    </section>
+
+    <section class="page" id="city">
+      <div class="hero"><div class="eyebrow">Cidade</div><h2>Hoghsmith.</h2><p>Moradores, bairros, projetos e identidade da cidade.</p></div>
+      <div class="sectionTitle"><h3>Moradores</h3><span>5 perfis</span></div><div class="people" id="peopleGrid"></div>
+      <div class="sectionTitle"><h3>Bairros</h3><span>2 cadastrados</span></div>
+      <div class="card"><div class="place"><div class="placeIcon">🏘️</div><div><h4>Centro</h4><small>Estação Central • residências • comércio</small></div><span class="tag">principal</span></div><div class="place"><div class="placeIcon">🌲</div><div><h4>Bairro da Floresta</h4><small>Área residencial e projetos naturais</small></div><span class="tag">novo</span></div></div>
+      <div class="sectionTitle"><h3>Projetos coletivos</h3><span>Em andamento</span></div>
+      <div class="project"><div class="projectTop"><div><b>🚉 Expansão da Linha Norte</b><small> • coletivo</small></div><small>64%</small></div><div class="bar"><i style="width:64%"></i></div></div>
+      <div class="project"><div class="projectTop"><div><b>🏛️ Praça Central</b><small> • coletivo</small></div><small>35%</small></div><div class="bar"><i style="width:35%"></i></div></div>
+    </section>
+
+    <section class="page" id="profile">
+      <div class="profileHeader"><div class="avatar"><canvas id="profileAvatar" width="8" height="8"></canvas></div><h2 id="profileName">Morador</h2><p id="profileSub">Morador de Hoghsmith</p></div>
+      <div class="profileStats"><div><b>4</b><span>LOCAIS</span></div><div><b>2</b><span>PROJETOS</span></div><div><b>1</b><span>BAIRRO</span></div></div>
+      <div class="sectionTitle"><h3>Residência</h3><span>coordenada oficial</span></div><div class="card"><div class="place"><div class="placeIcon">🏠</div><div><h4>Casa de Carlos</h4><small>X 120 • Y 68 • Z -90</small></div><span class="tag">porta</span></div></div>
+      <div class="sectionTitle"><h3>Meus projetos</h3><span>2 ativos</span></div>
+      <div class="project"><div class="projectTop"><div><b>🏗️ Ampliação da residência</b></div><small>70%</small></div><div class="bar"><i style="width:70%"></i></div></div>
+      <div class="project"><div class="projectTop"><div><b>🌾 Farm automática</b></div><small>25%</small></div><div class="bar"><i style="width:25%"></i></div></div>
+      <div class="sectionTitle"><h3>Identidade</h3><span>pixel art leve</span></div>
+      <div class="card"><div class="row between"><div><h3>Minha cabeça 8×8</h3><p>A imagem é montada pixel a pixel e ocupa pouquíssimo espaço no banco.</p></div><button class="iconBtn" onclick="openAvatarEditor()">✎</button></div></div>
+    </section>
+  </main>
+
+  <button class="fab" onclick="openAdd()">＋</button>
+  <nav class="nav">
+    <button class="active" data-page="home" onclick="go('home',this)"><span>⌂</span>Início</button>
+    <button data-page="map" onclick="go('map',this)"><span>⌖</span>Mapa</button><button></button>
+    <button data-page="city" onclick="go('city',this)"><span>▦</span>Cidade</button>
+    <button data-page="profile" onclick="go('profile',this)"><span>●</span>Perfil</button>
+  </nav>
+</div>
+
+<div class="modalWrap" id="addModal" onclick="modalBg(event,'addModal')"><div class="modal"><div class="handle"></div><h3>Adicionar em Hoghsmith</h3><div class="actions"><button class="action" onclick="openPlaceForm()">📍<b>Novo local</b><small>Casa, farm, estação, portal…</small></button><button class="action">🏗️<b>Novo projeto</b><small>Projeto pessoal ou coletivo</small></button><button class="action">👨‍🌾<b>Novo villager</b><small>Nome, profissão e trocas</small></button><button class="action">🏘️<b>Novo bairro</b><small>Organize regiões da cidade</small></button><button class="action">🚉<b>Nova rota</b><small>Estrada ou ferrovia cadastrada</small></button><button class="action">🏳️<b>Nova bandeira</b><small>Identidade pixelada</small></button></div><button class="secondary" onclick="closeModal('addModal')">Fechar</button></div></div>
+<div class="modalWrap" id="placeModal" onclick="modalBg(event,'placeModal')"><div class="modal"><div class="handle"></div><h3>Novo local</h3><label class="field">Nome<input id="pName" placeholder="Ex.: Casa da Andressa"></label><label class="field">Tipo<select id="pType"><option value="house">🏠 Residência</option><option value="farm">🌾 Farm</option><option value="station">🚉 Estação</option><option value="village">🏘️ Vila</option><option value="portal">🌀 Portal</option><option value="mine">⛏️ Mina</option><option value="landmark">📍 Ponto de referência</option></select></label><div class="formRow"><label class="field">X<input id="pX" type="number" placeholder="0"></label><label class="field">Z<input id="pZ" type="number" placeholder="0"></label></div><label class="field">Y (opcional)<input id="pY" type="number" placeholder="64"></label><button class="primary" onclick="savePlace()">Salvar local</button><button class="secondary" onclick="closeModal('placeModal')">Cancelar</button></div></div>
+<div class="modalWrap" id="avatarModal" onclick="modalBg(event,'avatarModal')"><div class="modal"><div class="handle"></div><h3>Editar cabeça 8×8</h3><div class="notice">Toque nos quadrados para pintar. Nesta #2 a matriz 8×8 é sincronizada com o Firestore no perfil autenticado.</div><div id="pixelEditor" style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px;max-width:320px;margin:16px auto"></div><input type="color" id="pixelColor" value="#8d6748" style="height:46px;padding:5px"><button class="primary" onclick="saveAvatar()">Salvar cabeça</button><button class="secondary" onclick="closeModal('avatarModal')">Cancelar</button></div></div>
+<script>
+const seed='1719830761368393441';
+const iconMap={house:'🏠',farm:'🌾',station:'🚉',village:'🏘️',portal:'🌀',mine:'⛏️',landmark:'📍'};
+const residents=[
+ {name:'Carlos',area:'Centro',palette:['#3b2a20','#6a472e','#d4a77d','#1f1f1f','#6f94b7']},
+ {name:'Everton',area:'Centro',palette:['#211d1b','#46352b','#b88c68','#283b55','#d1d6da']},
+ {name:'Shirley',area:'Floresta',palette:['#3b241c','#7a5239','#e2b28e','#784a70','#e8d8d6']},
+ {name:'Miguel',area:'Centro',palette:['#1c1b1a','#534334','#c8966e','#4e744b','#d7b45e']},
+ {name:'Andressa',area:'Floresta',palette:['#39281e','#80563b','#d5a782','#874f57','#ece2d5']}
+];
+let defaultPlaces=[
+ {id:'casa-carlos',name:'Casa de Carlos',type:'house',x:120,y:68,z:-90,owner:'Carlos'},
+ {id:'estacao-central',name:'Estação Central',type:'station',x:420,y:64,z:160,owner:'Cidade'},
+ {id:'farm-ferro',name:'Farm de Ferro',type:'farm',x:710,y:72,z:-310,owner:'Everton'},
+ {id:'vila-oeste',name:'Vila Oeste',type:'village',x:-640,y:70,z:520,owner:'Exploração'},
+ {id:'portal-centro',name:'Portal Central',type:'portal',x:330,y:65,z:40,owner:'Cidade'}
+];
+let places=JSON.parse(localStorage.getItem('hoghsmith_places')||'null')||defaultPlaces;
+let avatar=JSON.parse(localStorage.getItem('hoghsmith_avatar')||'null')||['#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#5c3827','#8d6748','#8d6748','#8d6748','#8d6748','#8d6748','#8d6748','#5c3827','#8d6748','#8d6748','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#8d6748','#8d6748','#e0b18b','#222','#e0b18b','#e0b18b','#e0b18b','#222','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#6b3b2d','#6b3b2d','#6b3b2d','#6b3b2d','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#e0b18b','#d2a37e','#d2a37e','#d2a37e','#d2a37e','#d2a37e','#d2a37e','#d2a37e','#d2a37e'];
+
+function go(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='map') setTimeout(resizeCanvas,80)}
+function openAdd(){document.getElementById('addModal').classList.add('show')}function closeModal(id){document.getElementById(id).classList.remove('show')}function modalBg(e,id){if(e.target.id===id)closeModal(id)}
+function openPlaceForm(){closeModal('addModal');document.getElementById('placeModal').classList.add('show')}
+function savePlace(){let name=pName.value.trim(); if(!name)return alert('Digite um nome para o local.'); let item={id:'p'+Date.now(),name,type:pType.value,x:+pX.value||0,y:+pY.value||64,z:+pZ.value||0,owner:'Cidade'}; places.push(item);persistPlaces();closeModal('placeModal');pName.value='';renderPlaces();populateRoutes();drawMap();}
+function persistPlaces(){localStorage.setItem('hoghsmith_places',JSON.stringify(places));document.getElementById('statPlaces').textContent=places.length}
+function renderPlaces(){let box=document.getElementById('placesList');box.innerHTML=places.map(p=>`<div class="place"><div class="placeIcon">${iconMap[p.type]||'📍'}</div><div><h4>${esc(p.name)}</h4><small>X ${p.x} • Y ${p.y} • Z ${p.z}</small></div><span class="tag">${esc(p.owner||'Cidade')}</span></div>`).join('')}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function drawAvatar(c,colors){let ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;colors.forEach((col,i)=>{ctx.fillStyle=col;ctx.fillRect(i%8,Math.floor(i/8),1,1)})}
+function renderPeople(){peopleGrid.innerHTML=residents.map((r,i)=>`<div class="person"><div class="avatar"><canvas id="av${i}" width="8" height="8"></canvas></div><b><span class="statusdot"></span>${r.name}</b><small>${r.area}</small></div>`).join('');residents.forEach((r,i)=>{let arr=makeAvatar(r.palette,i);drawAvatar(document.getElementById('av'+i),arr)})}
+function makeAvatar(p,k){let a=Array(64).fill(p[2]);for(let x=0;x<8;x++){a[x]=p[0];a[8+x]=x===0||x===7?p[0]:p[1]}a[25]=a[30]=p[3];a[43]=a[44]=p[0];for(let i=48;i<64;i++)a[i]=i%3===k%3?p[4]:p[2];return a}
+function openAvatarEditor(){let e=document.getElementById('pixelEditor');e.innerHTML='';avatar.forEach((col,i)=>{let d=document.createElement('button');d.style.cssText=`aspect-ratio:1;border:1px solid #2c3b2e;border-radius:5px;background:${col};padding:0`;d.onclick=()=>{d.style.background=document.getElementById('pixelColor').value;avatar[i]=document.getElementById('pixelColor').value};e.appendChild(d)});document.getElementById('avatarModal').classList.add('show')}
+function saveAvatar(){localStorage.setItem('hoghsmith_avatar',JSON.stringify(avatar));drawAvatar(profileAvatar,avatar);closeModal('avatarModal')}
+
+let canvas=document.getElementById('worldCanvas'),ctx=canvas.getContext('2d');let view={x:0,z:0,scale:.23};let dragging=false,last={x:0,y:0},route=null;
+function hash(x,z){let n=Math.sin(x*12.9898+z*78.233+Number(seed.slice(-8))*.000001)*43758.5453;return n-Math.floor(n)}
+function terrain(x,z){let v=(hash(Math.floor(x/180),Math.floor(z/180))*.55+hash(Math.floor(x/430),Math.floor(z/430))*.45);if(v<.19)return '#537f91';if(v<.28)return '#d4c48a';if(v<.52)return '#79955d';if(v<.73)return '#58784d';if(v<.88)return '#48683f';return '#89917a'}
+function resizeCanvas(){let r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;canvas.width=Math.floor(r.width*d);canvas.height=Math.floor(r.height*d);ctx.setTransform(d,0,0,d,0,0);drawMap()}
+function worldToScreen(x,z){let r=canvas.getBoundingClientRect();return {x:r.width/2+(x-view.x)*view.scale,y:r.height/2+(z-view.z)*view.scale}}
+function screenToWorld(x,y){let r=canvas.getBoundingClientRect();return {x:view.x+(x-r.width/2)/view.scale,z:view.z+(y-r.height/2)/view.scale}}
+function drawMap(){let r=canvas.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);let step=Math.max(55,Math.round(90/view.scale));let w0=screenToWorld(0,0),w1=screenToWorld(r.width,r.height);for(let x=Math.floor(w0.x/step)*step;x<w1.x;x+=step){for(let z=Math.floor(w0.z/step)*step;z<w1.z;z+=step){let a=worldToScreen(x,z);ctx.fillStyle=terrain(x,z);ctx.fillRect(a.x,a.y,step*view.scale+1,step*view.scale+1)}}
+ ctx.strokeStyle='rgba(255,255,255,.065)';ctx.lineWidth=1;let grid=500;for(let x=Math.floor(w0.x/grid)*grid;x<w1.x;x+=grid){let a=worldToScreen(x,0);ctx.beginPath();ctx.moveTo(a.x,0);ctx.lineTo(a.x,r.height);ctx.stroke()}for(let z=Math.floor(w0.z/grid)*grid;z<w1.z;z+=grid){let a=worldToScreen(0,z);ctx.beginPath();ctx.moveTo(0,a.y);ctx.lineTo(r.width,a.y);ctx.stroke()}
+ if(route){let a=worldToScreen(route.a.x,route.a.z),b=worldToScreen(route.b.x,route.b.z);ctx.strokeStyle='#f1e08a';ctx.lineWidth=4;ctx.setLineDash([10,8]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.setLineDash([])}
+ places.forEach(p=>{let s=worldToScreen(p.x,p.z);if(s.x<-80||s.y<-60||s.x>r.width+80||s.y>r.height+60)return;ctx.font='20px system-ui';ctx.textAlign='center';ctx.fillText(iconMap[p.type]||'📍',s.x,s.y);ctx.font='600 10px system-ui';let label=p.name;let tw=ctx.measureText(label).width;ctx.fillStyle='rgba(10,15,11,.78)';roundRect(ctx,s.x-tw/2-7,s.y+7,tw+14,19,9);ctx.fill();ctx.fillStyle='#fff';ctx.fillText(label,s.x,s.y+20)})
+}
+function roundRect(c,x,y,w,h,r){c.beginPath();c.roundRect?c.roundRect(x,y,w,h,r):(c.rect(x,y,w,h))}
+canvas.addEventListener('pointerdown',e=>{dragging=true;last={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!dragging)return;view.x-=(e.clientX-last.x)/view.scale;view.z-=(e.clientY-last.y)/view.scale;last={x:e.clientX,y:e.clientY};drawMap()});canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('wheel',e=>{e.preventDefault();zoomMap(e.deltaY<0?1.12:.89)},{passive:false});
+function zoomMap(k){view.scale=Math.max(.06,Math.min(1.4,view.scale*k));zoomLabel.textContent=Math.round(view.scale/.23*100)+'%';drawMap()}function resetMap(){view={x:100,z:50,scale:.23};zoomLabel.textContent='100%';route=null;drawMap()}
+function populateRoutes(){routeFrom.innerHTML=routeTo.innerHTML=places.map(p=>`<option value="${p.id}">${iconMap[p.type]||'📍'} ${esc(p.name)}</option>`).join('');if(places.length>1)routeTo.selectedIndex=1}
+function drawRoute(){let a=places.find(p=>p.id===routeFrom.value),b=places.find(p=>p.id===routeTo.value);if(!a||!b||a.id===b.id)return alert('Escolha dois locais diferentes.');route={a,b};let d=Math.hypot(b.x-a.x,b.z-a.z),dx=b.x-a.x,dz=b.z-a.z;routeCard.innerHTML=`<b>📏 ${esc(a.name)} → ${esc(b.name)}</b><div class="muted">${Math.round(d)} blocos em linha reta • ΔX ${dx>=0?'+':''}${dx} • ΔZ ${dz>=0?'+':''}${dz}</div>`;view.x=(a.x+b.x)/2;view.z=(a.z+b.z)/2;let span=Math.max(Math.abs(dx),Math.abs(dz),350);let r=canvas.getBoundingClientRect();view.scale=Math.max(.08,Math.min(.7,Math.min(r.width,r.height)*.65/span));zoomLabel.textContent=Math.round(view.scale/.23*100)+'%';drawMap()}
+function clearRoute(){route=null;routeCard.innerHTML='<b>📏 Medição rápida</b><div class="muted">Escolha dois locais abaixo para traçar uma linha.</div>';drawMap()}
+window.addEventListener('resize',resizeCanvas);
+renderPlaces();renderPeople();drawAvatar(profileAvatar,avatar);populateRoutes();persistPlaces();setTimeout(resizeCanvas,80);
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyAuUd8Yr-kU3k1eU_I2oD4c9bjlf6Dapv0",authDomain:"hoghsmith.firebaseapp.com",projectId:"hoghsmith",storageBucket:"hoghsmith.firebasestorage.app",messagingSenderId:"240172759246",appId:"1:240172759246:web:6ec29c152fbfab1799789f"};
+const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
+const profileMap={
+  'perfil.carlos@gmail.com':{name:'Carlos',area:'Centro'},
+  'perfil.everton@gmail.com':{name:'Everton',area:'Centro'},
+  'perfil.shirley@gmail.com':{name:'Shirley',area:'Floresta'},
+  'perfil.miguel@gmail.com':{name:'Miguel',area:'Centro'},
+  'perfil.andressa@gmail.com':{name:'Andressa',area:'Floresta'}
+};
+let activeUser=null, unsubPlaces=null;
+const gate=document.getElementById('loginGate'), status=document.getElementById('loginStatus'), dot=document.getElementById('syncDot');
+function setSync(ok,text){dot.className='syncdot '+(ok?'ok':'bad');document.getElementById('accountLabel').textContent=text}
+loginBtn.addEventListener('click',async()=>{status.textContent='Entrando…';try{await signInWithEmailAndPassword(auth,loginEmail.value.trim(),loginPassword.value);status.textContent=''}catch(e){status.textContent='Não foi possível entrar. Confira e-mail e senha.'}});
+loginPassword.addEventListener('keydown',e=>{if(e.key==='Enter')loginBtn.click()});
+logoutBtn.addEventListener('click',()=>signOut(auth));
+
+onAuthStateChanged(auth,async user=>{
+ if(!user){activeUser=null;gate.classList.remove('hidden');setSync(false,'Firebase desconectado');return}
+ const email=(user.email||'').toLowerCase(), profile=profileMap[email];
+ if(!profile){await signOut(auth);status.textContent='Esta conta não está vinculada a um morador de Hoghsmith.';return}
+ activeUser={uid:user.uid,email,...profile};gate.classList.add('hidden');
+ document.getElementById('homeName').textContent=profile.name;document.getElementById('profileName').textContent=profile.name;document.getElementById('profileSub').textContent=`Morador de Hoghsmith • ${profile.area}`;
+ setSync(true,`${profile.name} • sincronizado`);
+ const pref=doc(db,'players',user.uid), snap=await getDoc(pref);
+ if(!snap.exists()) await setDoc(pref,{name:profile.name,email:user.email,area:profile.area,createdAt:serverTimestamp(),avatar:window.avatar||[]});
+ else if(Array.isArray(snap.data().avatar)&&snap.data().avatar.length===64){window.avatar=snap.data().avatar;drawAvatar(profileAvatar,window.avatar)}
+ if(unsubPlaces)unsubPlaces();
+ unsubPlaces=onSnapshot(collection(db,'locations'),qs=>{
+   const remote=[];qs.forEach(d=>remote.push({id:d.id,...d.data()}));
+   if(remote.length){window.places=remote;places=remote;renderPlaces();populateRoutes();persistPlaces();drawMap()}
+   else seedInitialPlaces();
+ },()=>setSync(false,`${profile.name} • erro de sincronização`));
+});
+async function seedInitialPlaces(){for(const p of window.defaultPlaces||defaultPlaces){await setDoc(doc(db,'locations',p.id),p,{merge:true})}}
+
+const oldSavePlace=window.savePlace;
+window.savePlace=async function(){
+ if(!activeUser)return alert('Faça login primeiro.');
+ const name=pName.value.trim();if(!name)return alert('Digite um nome para o local.');
+ const item={id:'p'+Date.now(),name,type:pType.value,x:+pX.value||0,y:+pY.value||64,z:+pZ.value||0,owner:activeUser.name,ownerUid:activeUser.uid,createdAt:Date.now()};
+ try{await setDoc(doc(db,'locations',item.id),item);closeModal('placeModal');pName.value=''}catch(e){alert('Erro ao salvar no Firebase.')}
+};
+window.saveAvatar=async function(){
+ if(!activeUser)return alert('Faça login primeiro.');
+ try{await setDoc(doc(db,'players',activeUser.uid),{avatar:window.avatar||avatar,updatedAt:serverTimestamp()},{merge:true});drawAvatar(profileAvatar,window.avatar||avatar);closeModal('avatarModal');setSync(true,`${activeUser.name} • sincronizado`)}catch(e){alert('Erro ao salvar a cabeça no Firebase.')}
+};
+</script>
+</body>
+</html>
