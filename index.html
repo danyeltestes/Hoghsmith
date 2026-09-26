@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#182118" />
-<title>Painel de Hoghsmith — HOG.25.09#4.5.1</title>
+<title>Painel de Hoghsmith — HOG.25.09#4.5.2</title>
 <style>
 :root{--bg:#0f1510;--surface:#151d16;--surface2:#1b261c;--surface3:#223024;--text:#f2f6f0;--muted:#aab5aa;--green:#8bcf6a;--lime:#b5df77;--line:#2c3a2d;--danger:#e07c77;--gold:#d9c46c;--shadow:0 18px 50px rgba(0,0,0,.28);--radius:24px}
 *{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 50% -15%,#223025 0,#0f1510 38%,#0b100c 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh;display:flex;justify-content:center}.app{width:100%;max-width:520px;min-height:100vh;background:rgba(9,13,10,.35);position:relative;overflow:hidden}
@@ -44,12 +44,32 @@ main{padding:8px 14px 104px}.hero{padding:16px 2px 10px}.hero h2{font-size:27px}
 .saveState451{min-height:18px;margin-top:8px;font-size:10px;color:var(--muted)}
 .saveState451.ok{color:#9fdb88}.saveState451.bad{color:#ef9a94}
 
+
+/* ===== 4.5.2 — popup compacto + zoom ampliado ===== */
+.mapTapCard{
+  position:absolute;z-index:40;left:12px;right:auto;top:90px;bottom:auto;
+  width:min(255px,calc(100% - 24px));padding:11px 12px 10px;
+  border-radius:16px;background:rgba(10,16,11,.96);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 12px 34px rgba(0,0,0,.48);
+  backdrop-filter:blur(14px)
+}
+.mapTapCard.show{display:block}
+.mapTapCard b{display:block;font-size:12px;line-height:1.25;padding-right:28px}
+.mapTapCard small{font-size:9px;line-height:1.35;margin-top:3px}
+.mapTapActions{display:flex!important;flex-wrap:wrap;gap:6px;margin-top:9px}
+.mapTapActions button{flex:1 1 auto;min-width:88px;padding:8px 9px;font-size:9px;border-radius:10px}
+.mapTapClose452{position:absolute;right:7px;top:7px;width:26px!important;height:26px;padding:0!important;min-width:0!important;border-radius:9px!important;font-size:14px!important}
+#tapTravel{display:none!important}
+.mapTapActions .closeWide45{display:none!important}
+@media(max-width:380px){.mapTapCard{width:min(230px,calc(100% - 20px));padding:10px}.mapTapActions button{min-width:76px;font-size:8px}}
+
 </style>
 </head>
 <body>
 <div class="loginGate" id="loginGate"><div class="loginCard"><div class="loginLogo">🟩</div><div class="eyebrow">PAINEL DE HOGHSMITH</div><h2>Entrar na cidade</h2><p>Use sua conta individual. O painel carrega somente os dados reais sincronizados no Firebase.</p><label class="field">E-mail<input id="loginEmail" type="email" autocomplete="email" placeholder="Perfil.carlos@gmail.com"></label><label class="field">Senha<input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••"></label><button class="primary" id="loginBtn">Entrar</button><div class="loginStatus" id="loginStatus"></div></div></div>
 <div class="app">
-<header class="topbar"><div class="brandline"><div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div><div class="version">HOG.25.09#4.5.1</div></div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="notifBtn" class="notifBtn" onclick="openNotifications44()">🔔 <span id="notifCount44">0</span></button><button id="logoutBtn">Sair</button></div></header>
+<header class="topbar"><div class="brandline"><div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div><div class="version">HOG.25.09#4.5.2</div></div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="notifBtn" class="notifBtn" onclick="openNotifications44()">🔔 <span id="notifCount44">0</span></button><button id="logoutBtn">Sair</button></div></header>
 <main>
 <section class="page active" id="home"><div class="hero"><div class="eyebrow">Realm Bedrock • Base real</div><h2>Boa noite, <span id="homeName">morador</span>.</h2><p>Nesta versão, o painel mostra somente o que existe de verdade no banco.</p></div>
 <div class="centerCard"><div class="eyebrow">Centro oficial de Hoghsmith</div><div class="coords" id="homeCoords">X 139 • Z -32</div><div class="subcoords" id="homeAltitude">Altitude de referência: Y 104</div></div>
@@ -83,7 +103,7 @@ main{padding:8px 14px 104px}.hero{padding:16px 2px 10px}.hero h2{font-size:27px}
     <button onclick="openRoutes()"><span>≋</span>Rotas</button>
   </div>
 
-  <div class="mapTapCard" id="mapTapCard"><b id="tapCoords">X 0 • Z 0</b><small id="tapInfo">Coordenada selecionada.</small><div id="tapTravel"></div><div class="mapTapActions" id="tapActions"><button onclick="registerTappedPoint()">＋ Cadastrar local</button><button onclick="openTerritoryAtTap45()">▧ Criar território</button><button class="closeWide45" onclick="closeTapCard()">Fechar</button></div></div>
+  <div class="mapTapCard" id="mapTapCard"><button type="button" class="mapTapClose452" onclick="closeTapCard()" aria-label="Fechar">×</button><b id="tapCoords">X 0 • Z 0</b><small id="tapInfo">Coordenada selecionada.</small><div id="tapTravel"></div><div class="mapTapActions" id="tapActions"><button onclick="registerTappedPoint()">＋ Cadastrar</button><button onclick="openTerritoryAtTap45()">▧ Território</button></div></div>
   <div class="routeGuideBar" id="routeGuideBar44"><div class="stepPill" id="routeGuideStep44">1</div><div><b id="routeGuideTitle44">Selecione o ponto de partida</b><small id="routeGuideInfo44">Toque em um local cadastrado ou em qualquer ponto do mapa.</small></div><button onclick="cancelGuidedRoute44()">✕</button></div>
   <div class="territoryEditorBar" id="territoryEditorBar44"><b id="territoryEditorTitle44">Selecionando território</b><small id="territoryEditorInfo44">Toque no mapa.</small><div class="routeEditorActions"><button onclick="undoTerritoryPoint44()">↶ Desfazer</button><button id="finishTerritoryBtn44" onclick="finishTerritorySelection44()">✓ Concluir</button><button onclick="cancelTerritorySelection44()">✕ Cancelar</button></div></div>
   <div class="routeEditorBar" id="routeEditorBar"><b id="routeEditorTitle">Criando rota</b><small id="routeEditorInfo" style="display:block;color:var(--muted);margin-top:3px">Toque no mapa para adicionar pontos.</small><div class="routeEditorActions"><button onclick="undoRoutePoint()">↶ Desfazer</button><button onclick="finishRouteDraft()">✓ Concluir</button><button onclick="cancelRouteDraft()">✕ Cancelar</button></div></div>
@@ -103,7 +123,7 @@ main{padding:8px 14px 104px}.hero{padding:16px 2px 10px}.hero h2{font-size:27px}
 
 <div class="modalWrap" id="avatarModal" onclick="modalBg(event,'avatarModal')"><div class="modal"><div class="handle"></div><h3>Editar cabeça 8×8</h3><div class="notice">Você pode editar a cabeça atual ou começar com os 64 pixels totalmente brancos.</div><div class="pixelTools"><button class="secondary" onclick="resetAvatarWhite()">Criar do zero</button><button class="secondary" onclick="loadDefaultAvatar()">Usar padrão</button></div><div id="pixelEditor" style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px;max-width:320px;margin:16px auto"></div><label class="field">Cor do pincel<input type="color" id="pixelColor" value="#6f8f5b" style="height:46px;padding:5px"></label><button class="primary" onclick="saveAvatar()">Salvar cabeça</button><button class="secondary" onclick="closeModal('avatarModal')">Cancelar</button></div></div>
 
-<div class="modalWrap" id="adminModal" onclick="modalBg(event,'adminModal')"><div class="modal"><div class="handle"></div><h3>Administração</h3><div class="notice">Configurações globais do painel. Apenas a conta de Carlos pode alterar estes dados.</div><h4>Mapa e coordenadas</h4><label class="field">Seed<input id="adminSeed" inputmode="numeric"></label><div class="formRow"><label class="field">Edição<select id="adminEdition"><option value="Bedrock">Bedrock</option></select></label><label class="field">Dimensão<select id="adminDimension"><option value="overworld">Overworld</option><option value="nether">Nether</option><option value="end">End</option></select></label></div><div class="formRow three"><label class="field">Centro X<div class="signedCoord"><input id="adminX" type="text" inputmode="text"><button type="button" class="signBtn451" onclick="toggleCoordSign451('adminX')">±</button></div></label><label class="field">Centro Y<div class="signedCoord"><input id="adminY" type="text" inputmode="text"><button type="button" class="signBtn451" onclick="toggleCoordSign451('adminY')">±</button></div></label><label class="field">Centro Z<div class="signedCoord"><input id="adminZ" type="text" inputmode="text"><button type="button" class="signBtn451" onclick="toggleCoordSign451('adminZ')">±</button></div></label></div><label class="field">Zoom inicial<input id="adminZoom" type="number" min="1" max="20" step="1"></label><button class="primary" onclick="saveMapSettings()">Salvar configurações do mapa</button>
+<div class="modalWrap" id="adminModal" onclick="modalBg(event,'adminModal')"><div class="modal"><div class="handle"></div><h3>Administração</h3><div class="notice">Configurações globais do painel. Apenas a conta de Carlos pode alterar estes dados.</div><h4>Mapa e coordenadas</h4><label class="field">Seed<input id="adminSeed" inputmode="numeric"></label><div class="formRow"><label class="field">Edição<select id="adminEdition"><option value="Bedrock">Bedrock</option></select></label><label class="field">Dimensão<select id="adminDimension"><option value="overworld">Overworld</option><option value="nether">Nether</option><option value="end">End</option></select></label></div><div class="formRow three"><label class="field">Centro X<div class="signedCoord"><input id="adminX" type="text" inputmode="text"><button type="button" class="signBtn451" onclick="toggleCoordSign451('adminX')">±</button></div></label><label class="field">Centro Y<div class="signedCoord"><input id="adminY" type="text" inputmode="text"><button type="button" class="signBtn451" onclick="toggleCoordSign451('adminY')">±</button></div></label><label class="field">Centro Z<div class="signedCoord"><input id="adminZ" type="text" inputmode="text"><button type="button" class="signBtn451" onclick="toggleCoordSign451('adminZ')">±</button></div></label></div><label class="field">Zoom inicial<input id="adminZoom" type="number" min="3" max="11" step="1"></label><button class="primary" onclick="saveMapSettings()">Salvar configurações do mapa</button>
 <h4>Estruturas da seed</h4><div class="notice">Por padrão ficam desativadas para manter o mapa leve. Ative somente os tipos que devem aparecer para todos.</div><div class="structureGrid" id="adminStructures"></div><button class="primary" onclick="saveStructureSettings()">Salvar estruturas visíveis</button>
 <h4>Rotas da comunidade</h4><div id="adminCommunityRoutes"><div class="empty">Nenhuma rota pessoal disponível.</div></div><h4>Territórios da cidade</h4><div id="adminTerritories44"><div class="empty">Nenhum território cadastrado.</div></div><h4>Sugestões de território</h4><div id="adminSuggestions44"><div class="empty">Nenhuma sugestão pendente.</div></div><button class="secondary" onclick="openTrash44(true)">Abrir lixeira da cidade</button>
 <h4>Categorias</h4><div id="adminCategories"></div><label class="field">Nova categoria — nome<input id="newCatName" placeholder="Ex.: Monumento"></label><label class="field">Ícone<input id="newCatIcon" placeholder="Ex.: 🗿" maxlength="8"></label><button class="primary" onclick="addCategory()">Adicionar categoria</button><button class="secondary" id="publishDefaultsBtn" onclick="publishDefaultCategories()">Publicar categorias padrão no Firebase</button><button class="secondary" onclick="closeModal('adminModal')">Fechar</button></div></div>
@@ -155,14 +175,14 @@ function loadDefaultAvatar(){avatar=[...DEFAULT_AVATAR];renderPixelEditor()}
 function openAdmin(){if(!activeUser||activeUser.role!=='admin')return;renderMapSettings();renderCategoriesAdmin();adminModal.classList.add('show')}
 
 // ===== HOGHSMITH 4.2 EXP2 MAP ENGINE =====
-const seedViewState={cx:139,cz:-32,z:7,minZ:3,maxZ:8,drag:false,lastX:0,lastY:0,moved:false,structures:false,places:true,routes:true,chunks:false,selected:null,structureData:[],structureTimer:null,structureKey:'',tileErrors:0,routeDraft:null,communityRoutes:false};
+const seedViewState={cx:139,cz:-32,z:8,minZ:3,maxZ:11,tileMaxZ:8,drag:false,lastX:0,lastY:0,moved:false,structures:false,places:true,routes:true,chunks:false,selected:null,structureData:[],structureTimer:null,structureKey:'',tileErrors:0,routeDraft:null,communityRoutes:false};
 window.seedMapReady=false;
 function blocksPerPixel(){return Math.pow(2,8-seedViewState.z)}
 function tileSpan(){return 256*blocksPerPixel()}
 function mapRect(){return seedMapShell.getBoundingClientRect()}
 function worldToMap(x,z){const r=mapRect(),bpp=blocksPerPixel();return{x:r.width/2+(x-seedViewState.cx)/bpp,y:r.height/2+(z-seedViewState.cz)/bpp}}
 function mapToWorld(px,py){const r=mapRect(),bpp=blocksPerPixel();return{x:seedViewState.cx+(px-r.width/2)*bpp,z:seedViewState.cz+(py-r.height/2)*bpp}}
-function initSeedMap(){if(window.seedMapReady)return;window.seedMapReady=true;seedViewState.cx=Number(mapSettings.centerX)||139;seedViewState.cz=Number(mapSettings.centerZ)||-32;seedViewState.z=Math.max(5,Math.min(8,Number(mapSettings.defaultZoom)||7));
+function initSeedMap(){if(window.seedMapReady)return;window.seedMapReady=true;seedViewState.cx=Number(mapSettings.centerX)||139;seedViewState.cz=Number(mapSettings.centerZ)||-32;seedViewState.z=Math.max(5,Math.min(seedViewState.maxZ,Number(mapSettings.defaultZoom)||seedViewState.maxZ));
  seedMapShell.addEventListener('pointerdown',e=>{if(e.target.closest('button')||e.target.closest('.seedMarker')||e.target.closest('.mapTapCard'))return;seedViewState.drag=true;seedViewState.moved=false;seedViewState.lastX=e.clientX;seedViewState.lastY=e.clientY;seedMapShell.setPointerCapture(e.pointerId)});
  seedMapShell.addEventListener('pointermove',e=>{if(!seedViewState.drag)return;const dx=e.clientX-seedViewState.lastX,dy=e.clientY-seedViewState.lastY;if(Math.abs(dx)+Math.abs(dy)>3)seedViewState.moved=true;const bpp=blocksPerPixel();seedViewState.cx-=dx*bpp;seedViewState.cz-=dy*bpp;seedViewState.lastX=e.clientX;seedViewState.lastY=e.clientY;renderSeedMap(false)});
  seedMapShell.addEventListener('pointerup',e=>{if(!seedViewState.drag)return;seedViewState.drag=false;if(!seedViewState.moved){const r=mapRect(),w=mapToWorld(e.clientX-r.left,e.clientY-r.top);if(seedViewState.routeDraft)addRoutePoint(Math.round(w.x),Math.round(w.z));else selectMapPoint(Math.round(w.x),Math.round(w.z))}scheduleStructureScan()});
@@ -171,8 +191,26 @@ function initSeedMap(){if(window.seedMapReady)return;window.seedMapReady=true;se
  window.addEventListener('resize',()=>{if(document.getElementById('map').classList.contains('active'))renderSeedMap(false)});
 }
 function tileUrl(z,tx,ty){const seed=encodeURIComponent(String(mapSettings.seed||DEFAULT_MAP.seed));return `https://mc-api.bisai.dev/v1/seed/${seed}/tiles/${z}/${tx}/${ty}?version=1.21`}
-function renderTiles(){const r=mapRect();if(!r.width||!r.height)return;const span=tileSpan(),bpp=blocksPerPixel(),left=seedViewState.cx-r.width*bpp/2,top=seedViewState.cz-r.height*bpp/2,right=seedViewState.cx+r.width*bpp/2,bottom=seedViewState.cz+r.height*bpp/2;const minX=Math.floor(left/span),maxX=Math.floor(right/span),minY=Math.floor(top/span),maxY=Math.floor(bottom/span);const wanted=new Set();
- for(let tx=minX;tx<=maxX;tx++)for(let ty=minY;ty<=maxY;ty++){const key=`${seedViewState.z}:${tx}:${ty}`;wanted.add(key);let img=seedTiles.querySelector(`[data-key="${CSS.escape(key)}"]`);if(!img){img=document.createElement('img');img.className='seedTile';img.dataset.key=key;img.alt='';img.draggable=false;img.src=tileUrl(seedViewState.z,tx,ty);img.onload=()=>{mapLoading.style.display='none';mapStatus.textContent='Mapa carregado • arraste para explorar';};img.onerror=()=>{seedViewState.tileErrors++;img.style.opacity='.18';mapStatus.textContent='Alguns tiles não carregaram; tente mover ou alterar o zoom.';};seedTiles.appendChild(img)}const p=worldToMap(tx*span,ty*span);img.style.left=`${p.x}px`;img.style.top=`${p.y}px`;img.style.width='256px';img.style.height='256px';}
+function renderTiles(){
+ const r=mapRect();if(!r.width||!r.height)return;
+ const sourceZ=Math.min(seedViewState.z,seedViewState.tileMaxZ);
+ const sourceBpp=Math.pow(2,8-sourceZ), visualBpp=blocksPerPixel();
+ const span=256*sourceBpp, displaySize=span/visualBpp;
+ const left=seedViewState.cx-r.width*visualBpp/2,top=seedViewState.cz-r.height*visualBpp/2,right=seedViewState.cx+r.width*visualBpp/2,bottom=seedViewState.cz+r.height*visualBpp/2;
+ const minX=Math.floor(left/span),maxX=Math.floor(right/span),minY=Math.floor(top/span),maxY=Math.floor(bottom/span),wanted=new Set();
+ for(let tx=minX;tx<=maxX;tx++)for(let ty=minY;ty<=maxY;ty++){
+   const key=`${sourceZ}:${tx}:${ty}`;wanted.add(key);
+   let img=seedTiles.querySelector(`[data-key="${CSS.escape(key)}"]`);
+   if(!img){
+     img=document.createElement('img');img.className='seedTile';img.dataset.key=key;img.alt='';img.draggable=false;img.src=tileUrl(sourceZ,tx,ty);
+     img.onload=()=>{mapLoading.style.display='none';mapStatus.textContent=seedViewState.z>seedViewState.tileMaxZ?'Mapa ampliado • nível de detalhe máximo do terreno':'Mapa carregado • arraste para explorar';};
+     img.onerror=()=>{seedViewState.tileErrors++;img.style.opacity='.18';mapStatus.textContent='Alguns tiles não carregaram; tente mover ou alterar o zoom.';};
+     seedTiles.appendChild(img)
+   }
+   const p=worldToMap(tx*span,ty*span);
+   img.style.left=`${p.x}px`;img.style.top=`${p.y}px`;img.style.width=`${displaySize}px`;img.style.height=`${displaySize}px`;
+   img.style.imageRendering=seedViewState.z>seedViewState.tileMaxZ?'pixelated':'auto';
+ }
  [...seedTiles.children].forEach(el=>{if(!wanted.has(el.dataset.key))el.remove()});
 }
 const structIcons={village:'🏘️',mansion:'🏚️',ocean_monument:'🏛️',monument:'🏛️',shipwreck:'⚓',ruined_portal:'🌀',portal:'🌀',ancient_city:'🕳️',trial_chambers:'⚔️',trial_chamber:'⚔️',pillager_outpost:'🏹',outpost:'🏹',desert_pyramid:'🏜️',jungle_temple:'🌴',swamp_hut:'🛖',igloo:'❄️',ocean_ruin:'🌊',buried_treasure:'💰',mineshaft:'⛏️',trail_ruins:'🏺'};
@@ -183,13 +221,44 @@ function renderOverlays(){seedOverlay.innerHTML='';if(seedViewState.structures)f
 function drawChunkGrid(){const c=chunkCanvas,r=mapRect(),d=devicePixelRatio||1;c.width=Math.floor(r.width*d);c.height=Math.floor(r.height*d);c.style.width=r.width+'px';c.style.height=r.height+'px';const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,r.width,r.height);if(!seedViewState.chunks)return;const bpp=blocksPerPixel(),w0=mapToWorld(0,0),w1=mapToWorld(r.width,r.height);x.strokeStyle='rgba(255,255,255,.18)';x.lineWidth=1;for(let wx=Math.floor(w0.x/16)*16;wx<=w1.x;wx+=16){const p=worldToMap(wx,0);x.beginPath();x.moveTo(Math.round(p.x)+.5,0);x.lineTo(Math.round(p.x)+.5,r.height);x.stroke()}for(let wz=Math.floor(w0.z/16)*16;wz<=w1.z;wz+=16){const p=worldToMap(0,wz);x.beginPath();x.moveTo(0,Math.round(p.y)+.5);x.lineTo(r.width,Math.round(p.y)+.5);x.stroke()}}
 function renderSeedMap(scan=false){if(!window.seedMapReady)return;liveCoords.textContent=`X ${Math.round(seedViewState.cx)} • Z ${Math.round(seedViewState.cz)}`;mapSeedShort.textContent=String(mapSettings.seed||DEFAULT_MAP.seed).slice(0,6)+'…'+String(mapSettings.seed||DEFAULT_MAP.seed).slice(-4);renderTiles();renderRoutes();renderOverlays();drawChunkGrid();if(scan)scheduleStructureScan()}
 window.renderSeedMap=renderSeedMap;
-function seedZoom(dir){if(!window.seedMapReady)initSeedMap();const old=seedViewState.z;seedViewState.z=Math.max(seedViewState.minZ,Math.min(seedViewState.maxZ,seedViewState.z+dir));if(old!==seedViewState.z){seedTiles.innerHTML='';renderSeedMap(true)}}window.seedZoom=seedZoom;
+function seedZoom(dir){if(!window.seedMapReady)initSeedMap();const old=seedViewState.z;seedViewState.z=Math.max(seedViewState.minZ,Math.min(seedViewState.maxZ,seedViewState.z+dir));if(old!==seedViewState.z){closeTapCard();seedTiles.innerHTML='';renderSeedMap(true)}}window.seedZoom=seedZoom;
 function goMapHome(){seedViewState.cx=Number(mapSettings.centerX)||0;seedViewState.cz=Number(mapSettings.centerZ)||0;seedViewState.z=seedViewState.maxZ;seedTiles.innerHTML='';closeTapCard();renderSeedMap(true)}window.goMapHome=goMapHome;
 function toggleMapLayer(which){seedViewState[which]=!seedViewState[which];const id={structures:'btnStructures',places:'btnPlaces',routes:'btnRoutes',chunks:'btnChunks'}[which];document.getElementById(id).classList.toggle('on',seedViewState[which]);renderSeedMap(false)}window.toggleMapLayer=toggleMapLayer;
+
+function positionMapPopup452(x,z){
+ const card=document.getElementById('mapTapCard'),r=mapRect(),p=worldToMap(x,z);
+ requestAnimationFrame(()=>{
+   const cw=card.offsetWidth||245,ch=card.offsetHeight||120,pad=10,topSafe=54,bottomSafe=82;
+   let left=p.x+14,top=p.y+14;
+   if(left+cw>r.width-pad)left=p.x-cw-14;
+   if(top+ch>r.height-bottomSafe)top=p.y-ch-14;
+   left=Math.max(pad,Math.min(left,r.width-cw-pad));
+   top=Math.max(topSafe,Math.min(top,r.height-ch-bottomSafe));
+   card.style.left=left+'px';card.style.top=top+'px';card.style.right='auto';card.style.bottom='auto';
+ });
+}
+
 function closeTapCard(){mapTapCard.classList.remove('show');seedViewState.selected=null}window.closeTapCard=closeTapCard;
-function selectMapPoint(x,z){seedViewState.selected={kind:'point',x,z};tapCoords.textContent=`X ${x} • Z ${z}`;const dist=Math.round(Math.hypot(x-(Number(mapSettings.centerX)||0),z-(Number(mapSettings.centerZ)||0)));tapInfo.textContent=`${dist} blocos do centro de Hoghsmith`;mapTapCard.classList.add('show')}
-function selectStructure(st){seedViewState.selected={kind:'structure',...st};tapCoords.textContent=`${niceStructName(st.name)} • X ${st.x} • Z ${st.z}`;const dist=Math.round(Math.hypot(st.x-(Number(mapSettings.centerX)||0),st.z-(Number(mapSettings.centerZ)||0)));tapInfo.textContent=`Estrutura prevista pela seed • ${dist} blocos do centro`;mapTapCard.classList.add('show')}
-function selectExistingPlace(pl){seedViewState.selected={kind:'existing',...pl};tapCoords.textContent=`${pl.name} • X ${pl.x} • Z ${pl.z}`;tapInfo.textContent='Local cadastrado no Firebase.';mapTapCard.classList.add('show')}
+function selectMapPoint(x,z){
+ seedViewState.selected={kind:'point',x,z};tapCoords.textContent=`X ${x} • Z ${z}`;
+ const dist=Math.round(Math.hypot(x-(Number(mapSettings.centerX)||0),z-(Number(mapSettings.centerZ)||0)));
+ tapInfo.textContent=`${dist} blocos do centro`;
+ tapActions.innerHTML=`<button onclick="registerTappedPoint()">＋ Cadastrar</button><button onclick="openTerritoryAtTap45()">▧ Território</button>`;
+ mapTapCard.classList.add('show');positionMapPopup452(x,z)
+}
+function selectStructure(st){
+ seedViewState.selected={kind:'structure',...st};tapCoords.textContent=niceStructName(st.name);
+ tapInfo.textContent=`X ${st.x} • Z ${st.z} • prevista pela seed`;
+ tapActions.innerHTML=`<button onclick="registerTappedPoint()">＋ Cadastrar</button>`;
+ mapTapCard.classList.add('show');positionMapPopup452(st.x,st.z)
+}
+function selectExistingPlace(pl){
+ seedViewState.selected={kind:'existing',...pl};tapCoords.textContent=pl.name;
+ tapInfo.textContent=`X ${pl.x} • Y ${pl.y??'—'} • Z ${pl.z}`;
+ const canEdit=activeUser&&(pl.ownerUid===activeUser.uid||activeUser.role==='admin');
+ tapActions.innerHTML=canEdit?`<button onclick="editExistingPlace('${pl.id}')">✎ Editar</button><button onclick="deleteExistingPlace('${pl.id}')">🗑 Remover</button>`:'';
+ mapTapCard.classList.add('show');positionMapPopup452(Number(pl.x)||0,Number(pl.z)||0)
+}
 function registerTappedPoint(){const s=seedViewState.selected;if(!s)return;if(s.kind==='existing')return alert('Este local já está cadastrado.');openPlaceForm();pX.value=Math.round(s.x);pZ.value=Math.round(s.z);if(s.kind==='structure'){pName.value=niceStructName(s.name);pDescription.value='Estrutura prevista pela seed.'}closeTapCard()}window.registerTappedPoint=registerTappedPoint;
 async function scanStructures(){if(!seedViewState.structures)return;const cx=Math.round(seedViewState.cx),cz=Math.round(seedViewState.cz);const key=`${mapSettings.seed}:${Math.round(cx/256)}:${Math.round(cz/256)}`;if(seedViewState.structureKey===key)return;seedViewState.structureKey=key;mapStatus.textContent='Consultando estruturas Bedrock…';try{const enabled=(mapSettings.structureTypes||[]).map(Number).filter(Boolean);if(!enabled.length){seedViewState.structureData=[];mapStatus.textContent='Mapa ativo • estruturas desativadas pela Prefeitura';renderOverlays();return}const types=enabled.join(',');const radius=120;const url=`https://mineseedfinder.vercel.app/scan/bedrock?seed=${encodeURIComponent(String(mapSettings.seed||DEFAULT_MAP.seed))}&x=${cx}&z=${cz}&radius=${radius}&max=120&types=${types}`;const res=await fetch(url);if(!res.ok)throw new Error('HTTP '+res.status);const data=await res.json();seedViewState.structureData=Array.isArray(data.results)?data.results:[];mapStatus.textContent=`Mapa ativo • ${seedViewState.structureData.length} estruturas previstas carregadas`;renderOverlays()}catch(e){mapStatus.textContent='Mapa ativo • estruturas Bedrock indisponíveis agora';seedViewState.structureData=[];renderOverlays()}}
 function scheduleStructureScan(){clearTimeout(seedViewState.structureTimer);seedViewState.structureTimer=setTimeout(scanStructures,500)}
@@ -214,13 +283,8 @@ function focusRoute(id){const rt=routes.find(r=>r.id===id);if(!rt||!rt.points?.l
 function editRoute(id){const rt=routes.find(r=>r.id===id);if(!rt||(!activeUser||rt.ownerUid!==activeUser.uid&&activeUser.role!=='admin'))return;const name=prompt('Nome da rota:',rt.name);if(name===null)return;const cat=prompt('Categoria (Estrada, Ferrovia, Caminho, Túnel, Canal, Outro):',rt.category||'Outro');if(cat===null)return;window.updateRouteMeta?.(id,name.trim()||rt.name,cat.trim()||rt.category)}window.editRoute=editRoute;
 function runMapSearch(){const q=mapSearch.value.trim();if(!q)return;const m=q.match(/^(-?\d+)\s*[, ]\s*(-?\d+)$/);if(m){seedViewState.cx=Number(m[1]);seedViewState.cz=Number(m[2]);renderSeedMap(true);return}const low=q.toLowerCase(),pl=places.find(p=>String(p.name).toLowerCase().includes(low));if(pl){seedViewState.cx=Number(pl.x)||0;seedViewState.cz=Number(pl.z)||0;renderSeedMap(false);selectExistingPlace(pl);return}const rt=routes.find(r=>String(r.name).toLowerCase().includes(low)&&(r.official||r.ownerUid===activeUser?.uid||activeUser?.role==='admin'));if(rt)return focusRoute(rt.id);alert('Nenhum local, rota ou coordenada encontrado.')}window.runMapSearch=runMapSearch;
 function renderStructureAdmin(){if(!window.adminStructures)return;const on=(mapSettings.structureTypes||[]).map(Number);adminStructures.innerHTML=STRUCTURE_TYPES.map(t=>`<label class="toggleRow"><span>${esc(t.name)}</span><input type="checkbox" data-struct="${t.id}" ${on.includes(t.id)?'checked':''}></label>`).join('');seedViewState.structures=on.length>0;btnStructures.classList.toggle('on',seedViewState.structures)}
-function renderSelectedTravel(x,z){const d=Math.hypot(x-(Number(mapSettings.centerX)||0),z-(Number(mapSettings.centerZ)||0));tapTravel.innerHTML=travelHtml(d,'')}
-const _oldSelectMapPoint=selectMapPoint;selectMapPoint=function(x,z){_oldSelectMapPoint(x,z);renderSelectedTravel(x,z)};
-const _oldSelectStructure=selectStructure;selectStructure=function(st){_oldSelectStructure(st);renderSelectedTravel(st.x,st.z)};
-const _oldSelectExistingPlace=selectExistingPlace;selectExistingPlace=function(pl){_oldSelectExistingPlace(pl);renderSelectedTravel(Number(pl.x)||0,Number(pl.z)||0);tapActions.innerHTML=`<button onclick="setMeasureOrigin(${Number(pl.x)||0},${Number(pl.z)||0},'${esc(pl.name).replace(/'/g,"\\'")}')">📏 Origem</button><button onclick="editExistingPlace('${pl.id}')">✎ Editar</button><button onclick="deleteExistingPlace('${pl.id}')">🗑 Excluir</button><button onclick="closeTapCard()">Fechar</button>`};
-let measureOrigin=null;function setMeasureOrigin(x,z,name){measureOrigin={x,z,name};tapInfo.textContent=`Origem definida: ${name}. Toque em outro ponto e use “Medir daqui”.`;tapActions.innerHTML=`<button onclick="measureToSelected()">📏 Medir daqui</button><button onclick="closeTapCard()">Fechar</button>`}window.setMeasureOrigin=setMeasureOrigin;
-function measureToSelected(){const s=seedViewState.selected;if(!measureOrigin||!s)return;const d=Math.hypot(s.x-measureOrigin.x,s.z-measureOrigin.z);tapInfo.textContent=`${measureOrigin.name} → destino • ${Math.round(d)} blocos em linha reta`;tapTravel.innerHTML=travelHtml(d,'')}window.measureToSelected=measureToSelected;
-function openRouteFromPlace(id){const p=places.find(x=>x.id===id);if(!p)return;startRouteDraft();addRoutePoint(Number(p.x)||0,Number(p.z)||0)}
+function renderSelectedTravel(){tapTravel.innerHTML=''}
+function openRouteFromPlace(id){const p=places.find(x=>x.id===id);if(!p)return;startGuidedRoute44();guidedPick44(Number(p.x)||0,Number(p.z)||0,p.name)}
 window.addEventListener('load',()=>{renderPeople();renderPlaces();renderMapSettings();drawAvatar(profileAvatar,avatar);refreshCategorySelect();renderStructureAdmin();renderRouteLists()});
 
 </script>
@@ -351,7 +415,7 @@ window.saveMapSettings=async function(){
  const $=id=>document.getElementById(id); let centerX,centerY,centerZ;
  try{centerX=parseCoord451($('adminX').value,'Centro X');centerY=parseCoord451($('adminY').value,'Centro Y');centerZ=parseCoord451($('adminZ').value,'Centro Z')}
  catch(e){return alert(e.message)}
- const data={seed:$('adminSeed').value.trim()||DEFAULT_MAP.seed,edition:$('adminEdition').value,dimension:$('adminDimension').value,centerX,centerY,centerZ,defaultZoom:Math.max(3,Math.min(8,Number($('adminZoom').value)||8)),structureTypes:mapSettings.structureTypes||[],updatedAt:serverTimestamp(),updatedBy:activeUser.uid};
+ const data={seed:$('adminSeed').value.trim()||DEFAULT_MAP.seed,edition:$('adminEdition').value,dimension:$('adminDimension').value,centerX,centerY,centerZ,defaultZoom:Math.max(3,Math.min(11,Number($('adminZoom').value)||11)),structureTypes:mapSettings.structureTypes||[],updatedAt:serverTimestamp(),updatedBy:activeUser.uid};
  try{await setDoc(doc(db,'settings','map'),data,{merge:true});mapSettings={...mapSettings,...data};renderMapSettings();alert('Configurações do mapa salvas.')}catch(e){console.error(e);alert('Erro ao salvar as configurações. '+(e?.code?`Código: ${e.code}`:''))}
 };
 window.publishDefaultCategories=async function(){if(!activeUser||activeUser.role!=='admin')return;try{for(const c of DEFAULT_CATEGORIES)await setDoc(doc(db,'categories',c.id),c,{merge:true});}catch(e){alert('Erro ao publicar categorias.')}};
@@ -423,6 +487,6 @@ import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc, setDoc } fro
 const app45=getApps().length?getApp():null,auth45=getAuth(app45),db45=getFirestore(app45);
 const fakeIds45=new Set(['casa-carlos','estacao-central','farm-ferro','vila-oeste','portal-centro']);
 const fakeNames45=new Set(['Casa de Carlos','Estação Central','Farm de Ferro','Vila Oeste','Portal Central']);
-onAuthStateChanged(auth45,async user=>{if(!user)return;try{const flag=doc(db45,'settings','migration-4-5-1-clean');const fsnap=await getDoc(flag);if(fsnap.exists())return;const qs=await getDocs(collection(db45,'locations'));for(const d of qs.docs){const v=d.data();if(fakeIds45.has(d.id)||fakeNames45.has(v.name))await deleteDoc(doc(db45,'locations',d.id));}await setDoc(flag,{done:true,at:Date.now(),note:'Removeu apenas registros demonstrativos conhecidos das versões iniciais.'});}catch(e){console.warn('Limpeza 4.5 não concluída',e)}});
+onAuthStateChanged(auth45,async user=>{if(!user)return;try{const flag=doc(db45,'settings','migration-4-5-2-clean');const fsnap=await getDoc(flag);if(fsnap.exists())return;const qs=await getDocs(collection(db45,'locations'));for(const d of qs.docs){const v=d.data();if(fakeIds45.has(d.id)||fakeNames45.has(v.name))await deleteDoc(doc(db45,'locations',d.id));}await setDoc(flag,{done:true,at:Date.now(),note:'Removeu apenas registros demonstrativos conhecidos das versões iniciais.'});}catch(e){console.warn('Limpeza 4.5 não concluída',e)}});
 </script>
 </body></html>
