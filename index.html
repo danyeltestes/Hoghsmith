@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#182118" />
-<title>Painel de Hoghsmith — HOG.25.09#4.5.4</title>
+<title>Painel de Hoghsmith — HOG.25.09#4.5.5</title>
 <style>
 :root{--bg:#0f1510;--surface:#151d16;--surface2:#1b261c;--surface3:#223024;--text:#f2f6f0;--muted:#aab5aa;--green:#8bcf6a;--lime:#b5df77;--line:#2c3a2d;--danger:#e07c77;--gold:#d9c46c;--shadow:0 18px 50px rgba(0,0,0,.28);--radius:24px}
 *{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 50% -15%,#223025 0,#0f1510 38%,#0b100c 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh;display:flex;justify-content:center}.app{width:100%;max-width:520px;min-height:100vh;background:rgba(9,13,10,.35);position:relative;overflow:hidden}
@@ -192,12 +192,38 @@ body:not(.mapMode454) .mapBottomBar454{display:none!important}
   .routeGuideBar,.territoryEditorBar,.routeEditorBar{width:calc(100% - 14px)!important}
 }
 
+
+/* ===== 4.5.5 — + fixo na navegação e territórios retangulares ===== */
+.nav.nav45{grid-template-columns:repeat(5,1fr)!important}
+.nav.nav45 button:nth-child(3){opacity:1!important;pointer-events:auto!important}
+.navAdd455{
+  width:48px!important;height:48px!important;min-width:48px!important;
+  border-radius:16px!important;margin:auto!important;
+  background:linear-gradient(145deg,#dbecc8,#aacb87)!important;
+  color:#132013!important;font-size:27px!important;line-height:1!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.32)!important;
+  display:grid!important;place-items:center!important;padding:0!important
+}
+.navAdd455 span{font-size:28px!important;line-height:1!important}
+body .fab{display:none!important}
+.mapBottomBar454{grid-template-columns:repeat(4,1fr)!important}
+.mapBottomBar454 .fabGap454{display:none!important}
+.territoryCoordBlock455{
+  margin-top:10px;padding:12px;border-radius:18px;background:#0f1711;
+  border:1px solid #2d3d30
+}
+.territoryCoordBlock455 h4{margin:0 0 4px;font-size:12px}
+.territoryCoordBlock455 p,.territoryCoordHint455{
+  margin:0 0 10px;font-size:9px;line-height:1.45;color:var(--muted)
+}
+#finishTerritoryBtn44{display:none!important}
+
 </style>
 </head>
 <body>
 <div class="loginGate" id="loginGate"><div class="loginCard"><div class="loginLogo">🟩</div><div class="eyebrow">PAINEL DE HOGHSMITH</div><h2>Entrar na cidade</h2><p>Use sua conta individual. O painel carrega somente os dados reais sincronizados no Firebase.</p><label class="field">E-mail<input id="loginEmail" type="email" autocomplete="email" placeholder="Perfil.carlos@gmail.com"></label><label class="field">Senha<input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••"></label><button class="primary" id="loginBtn">Entrar</button><div class="loginStatus" id="loginStatus"></div></div></div>
 <div class="app">
-<header class="topbar"><div class="brandline"><div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div><div class="version">HOG.25.09#4.5.4</div></div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="notifBtn" class="notifBtn" onclick="openNotifications44()">🔔 <span id="notifCount44">0</span></button><button id="logoutBtn">Sair</button></div></header>
+<header class="topbar"><div class="brandline"><div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div><div class="version">HOG.25.09#4.5.5</div></div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="notifBtn" class="notifBtn" onclick="openNotifications44()">🔔 <span id="notifCount44">0</span></button><button id="logoutBtn">Sair</button></div></header>
 <main>
 <section class="page active" id="home"><div class="hero"><div class="eyebrow">Realm Bedrock • Base real</div><h2>Boa noite, <span id="homeName">morador</span>.</h2><p>Nesta versão, o painel mostra somente o que existe de verdade no banco.</p></div>
 <div class="centerCard"><div class="eyebrow">Centro oficial de Hoghsmith</div><div class="coords" id="homeCoords">X 139 • Z -32</div><div class="subcoords" id="homeAltitude">Altitude de referência: Y 104</div></div>
@@ -279,7 +305,6 @@ body:not(.mapMode454) .mapBottomBar454{display:none!important}
   <div class="mapBottomBar454" aria-label="Ferramentas do mapa">
     <button onclick="openLayers45()"><span class="mi454">◫</span>Camadas</button>
     <button class="primary454" onclick="startGuidedRoute44()"><span class="mi454">↗</span>Traçar rota</button>
-    <div class="fabGap454"></div>
     <button onclick="openRoutes()"><span class="mi454">≋</span>Rotas</button>
     <button onclick="goMapHome()"><span class="mi454">⌂</span>Centro</button>
   </div>
@@ -288,8 +313,7 @@ body:not(.mapMode454) .mapBottomBar454{display:none!important}
 <section class="page" id="city"><div class="hero"><div class="eyebrow">Cidade</div><h2>Moradores de Hoghsmith.</h2><p>Sem bairros, projetos ou informações demonstrativas.</p></div><div class="sectionTitle"><h3>Moradores</h3><span>5 perfis</span></div><div class="people" id="peopleGrid"></div><div class="sectionTitle"><h3>Territórios</h3><span id="territoryCount44">0 cadastrados</span></div><div class="card" id="territoryCityList44"><div class="empty">Nenhum território cadastrado.</div></div><button class="primary" onclick="openTerritoryForm44()">＋ Cadastrar território</button></section>
 <section class="page" id="profile"><div class="profileHeader"><div class="avatar"><canvas id="profileAvatar" width="8" height="8"></canvas></div><h2 id="profileName">Morador</h2><p id="profileSub">Morador de Hoghsmith</p></div><div class="card"><div class="row between"><div><h3>Minha cabeça 8×8</h3><p>O avatar salvo aqui é o mesmo exibido em todo o painel.</p></div><button class="smallBtn" onclick="openAvatarEditor()">Editar</button></div></div><div class="card"><div class="row between"><div><h3>🗑️ Lixeira</h3><p>Itens removidos ficam por 7 dias e depois são excluídos permanentemente pelo sistema.</p></div><button class="smallBtn" onclick="openTrash44()">Abrir</button></div></div><div class="adminOnly" id="adminSection"><div class="sectionTitle"><h3>Administração</h3><span>Prefeito</span></div><div class="card"><div class="place"><div class="placeIcon">⚙️</div><div><h4>Configurações da cidade</h4><small>Centro do mapa, seed, dimensão e categorias.</small></div><button class="smallBtn" onclick="openAdmin()">Abrir</button></div></div></div></section>
 </main>
-<button class="fab" onclick="openPlaceForm()">＋</button>
-<nav class="nav nav45"><button class="active" data-page="home" onclick="go('home',this)"><span>⌂</span>Início</button><button data-page="map" onclick="go('map',this)"><span>⌖</span>Mapa</button><button></button><button data-page="city" onclick="go('city',this)"><span>◇</span>Cidade</button><button data-page="profile" onclick="go('profile',this)"><span>●</span>Perfil</button></nav>
+<nav class="nav nav45"><button class="active" data-page="home" onclick="go('home',this)"><span>⌂</span>Início</button><button data-page="map" onclick="go('map',this)"><span>⌖</span>Mapa</button><button data-page="city" onclick="go('city',this)"><span>◇</span>Cidade</button><button class="navAdd455" type="button" onclick="openPlaceForm()" aria-label="Cadastrar local"><span>＋</span></button><button data-page="profile" onclick="go('profile',this)"><span>●</span>Perfil</button></nav>
 </div>
 
 <div class="modalWrap" id="placeModal" onclick="modalBg(event,'placeModal')"><div class="modal"><div class="handle"></div><h3>Novo local</h3><label class="field">Nome<input id="pName" placeholder="Ex.: Prefeitura"></label><label class="field">Categoria<select id="pType"></select></label><div class="formRow three"><label class="field">X<div class="signedCoord"><input id="pX" type="text" inputmode="text" autocomplete="off" placeholder="-120"><button type="button" class="signBtn451" onclick="toggleCoordSign451('pX')" aria-label="Alternar sinal de X">±</button></div></label><label class="field">Y<div class="signedCoord"><input id="pY" type="text" inputmode="text" autocomplete="off" placeholder="64"><button type="button" class="signBtn451" onclick="toggleCoordSign451('pY')" aria-label="Alternar sinal de Y">±</button></div></label><label class="field">Z<div class="signedCoord"><input id="pZ" type="text" inputmode="text" autocomplete="off" placeholder="-32"><button type="button" class="signBtn451" onclick="toggleCoordSign451('pZ')" aria-label="Alternar sinal de Z">±</button></div></label></div><label class="field">Descrição opcional<textarea id="pDescription" placeholder="Informação real sobre o local"></textarea></label><button class="primary" id="savePlaceBtn451" onclick="savePlace()">Salvar local</button><div class="saveState451" id="placeSaveState451"></div><button class="secondary" onclick="closeModal('placeModal')">Cancelar</button></div></div>
@@ -306,7 +330,27 @@ body:not(.mapMode454) .mapBottomBar454{display:none!important}
 <div class="modalWrap" id="routeSaveModal" onclick="modalBg(event,'routeSaveModal')"><div class="modal"><div class="handle"></div><h3>Salvar rota</h3><label class="field">Nome<input id="routeName" placeholder="Ex.: Linha Norte"></label><label class="field">Categoria<select id="routeCategory"><option>Estrada</option><option>Ferrovia</option><option>Caminho</option><option>Túnel</option><option>Canal</option><option>Outro</option></select></label><label class="field">Cor da linha<input type="color" id="routeColor45" value="#8bcf6a" style="height:48px;padding:5px"></label><div class="notice">A rota ficará disponível na camada Rotas da comunidade. O Prefeito pode publicá-la como rota oficial.</div><button class="primary" onclick="saveRouteDraft()">Salvar rota</button><button class="secondary" onclick="closeModal('routeSaveModal')">Cancelar</button></div></div>
 <div class="modalWrap" id="routeGuideResultModal44" onclick="modalBg(event,'routeGuideResultModal44')"><div class="modal"><div class="handle"></div><h3>Rota calculada</h3><div id="routeGuideResult44"></div><button class="primary" onclick="saveGuidedRoutePersonal44()">Salvar como rota pessoal</button><button class="adminOnly" id="saveOfficialGuided44" style="width:100%;border:0;background:#d9c46c;color:#1b1b12;font-weight:800;padding:13px;border-radius:15px;margin-top:8px" onclick="saveGuidedRouteOfficial44()">Publicar como rota oficial</button><button class="secondary" onclick="closeModal('routeGuideResultModal44')">Fechar</button></div></div>
 <div class="modalWrap" id="territoriesModal44" onclick="modalBg(event,'territoriesModal44')"><div class="modal"><div class="handle"></div><h3>Territórios de Hoghsmith</h3><div class="notice">Todos os territórios cadastrados são públicos no mapa. Cada morador administra os próprios; o Prefeito pode administrar todos.</div><div id="territoryList44"></div><button class="primary" onclick="closeModal('territoriesModal44');openTerritoryForm44()">＋ Novo território</button><button class="secondary" onclick="closeModal('territoriesModal44')">Fechar</button></div></div>
-<div class="modalWrap" id="territoryFormModal44" onclick="modalBg(event,'territoryFormModal44')"><div class="modal"><div class="handle"></div><h3 id="territoryFormTitle44">Novo território</h3><input type="hidden" id="territoryEditId44"><label class="field">Nome<input id="territoryName44" placeholder="Ex.: Terreno de Carlos"></label><label class="field">Tipo<select id="territoryType44"><option>Terreno residencial</option><option>Área de projeto</option><option>Área pública</option><option>Farm</option><option>Zona de mineração</option><option>Reserva</option><option>Área comercial</option><option>Outro</option></select></label><div class="colorRow44"><label class="field">Regra de passagem<select id="territoryPassage44"><option value="allowed">Permitida</option><option value="avoid">Evitar</option><option value="blocked">Proibida</option></select></label><label class="field">Cor<input type="color" id="territoryColor44" value="#5d9f63"></label></div><label class="field">Descrição opcional<textarea id="territoryDescription44"></textarea></label><label class="field">Formato<select id="territoryMode44" onchange="toggleTerritoryCoords45()"><option value="rectangle">Retângulo — marcar no mapa</option><option value="coordinates">Retângulo — coordenadas exatas</option><option value="polygon">Área livre — vários pontos</option></select></label><div id="territoryCoords45" class="coordBox45" style="display:none"><div class="formRow"><label class="field">Canto 1 — X<div class="signedCoord"><input id="terrX145" type="text" inputmode="text" placeholder="-100"><button type="button" class="signBtn451" onclick="toggleCoordSign451('terrX145')">±</button></div></label><label class="field">Canto 1 — Z<div class="signedCoord"><input id="terrZ145" type="text" inputmode="text" placeholder="-100"><button type="button" class="signBtn451" onclick="toggleCoordSign451('terrZ145')">±</button></div></label></div><div class="formRow"><label class="field">Canto 2 — X<div class="signedCoord"><input id="terrX245" type="text" inputmode="text" placeholder="100"><button type="button" class="signBtn451" onclick="toggleCoordSign451('terrX245')">±</button></div></label><label class="field">Canto 2 — Z<div class="signedCoord"><input id="terrZ245" type="text" inputmode="text" placeholder="100"><button type="button" class="signBtn451" onclick="toggleCoordSign451('terrZ245')">±</button></div></label></div><button class="secondary" onclick="applyTerritoryCoords45()">Usar coordenadas</button></div><div id="territoryAreaSummary44" class="areaSummary44">Nenhuma área selecionada.</div><div id="territoryOverlap44"></div><button class="secondary" id="selectTerritoryMapBtn45" onclick="beginTerritoryFromForm44()">Selecionar área no mapa</button><button class="primary" onclick="saveTerritory44()">Salvar território</button><button class="secondary" onclick="closeModal('territoryFormModal44')">Cancelar</button></div></div>
+<div class="modalWrap" id="territoryFormModal44" onclick="modalBg(event,'territoryFormModal44')"><div class="modal"><div class="handle"></div><h3 id="territoryFormTitle44">Novo território</h3><input type="hidden" id="territoryEditId44"><input type="hidden" id="territoryMode44" value="rectangle"><label class="field">Nome<input id="territoryName44" placeholder="Ex.: Terreno de Carlos"></label><label class="field">Tipo<select id="territoryType44"><option>Terreno residencial</option><option>Área de projeto</option><option>Área pública</option><option>Farm</option><option>Zona de mineração</option><option>Reserva</option><option>Área comercial</option><option>Outro</option></select></label><div class="colorRow44"><label class="field">Regra de passagem<select id="territoryPassage44"><option value="allowed">Permitida</option><option value="avoid">Evitar</option><option value="blocked">Proibida</option></select></label><label class="field">Cor<input type="color" id="territoryColor44" value="#5d9f63"></label></div><label class="field">Descrição opcional<textarea id="territoryDescription44"></textarea></label>
+
+<div class="territoryCoordBlock455">
+  <h4>Área retangular</h4>
+  <p>Informe dois cantos opostos. Eles formam o retângulo automaticamente.</p>
+  <div class="formRow">
+    <label class="field">Canto 1 — X<div class="signedCoord"><input id="terrX145" type="text" inputmode="text" placeholder="-100"><button type="button" class="signBtn451" onclick="toggleCoordSign451('terrX145')">±</button></div></label>
+    <label class="field">Canto 1 — Z<div class="signedCoord"><input id="terrZ145" type="text" inputmode="text" placeholder="-100"><button type="button" class="signBtn451" onclick="toggleCoordSign451('terrZ145')">±</button></div></label>
+  </div>
+  <div class="formRow">
+    <label class="field">Canto 2 — X<div class="signedCoord"><input id="terrX245" type="text" inputmode="text" placeholder="100"><button type="button" class="signBtn451" onclick="toggleCoordSign451('terrX245')">±</button></div></label>
+    <label class="field">Canto 2 — Z<div class="signedCoord"><input id="terrZ245" type="text" inputmode="text" placeholder="100"><button type="button" class="signBtn451" onclick="toggleCoordSign451('terrZ245')">±</button></div></label>
+  </div>
+  <button class="secondary" type="button" onclick="applyTerritoryCoords45()">Pré-visualizar retângulo</button>
+  <div class="territoryCoordHint455">Ou selecione os dois cantos diretamente no mapa.</div>
+</div>
+
+<div id="territoryAreaSummary44" class="areaSummary44">Nenhuma área selecionada.</div><div id="territoryOverlap44"></div>
+<button class="secondary" id="selectTerritoryMapBtn45" onclick="beginTerritoryFromForm44()">Selecionar 2 cantos no mapa</button>
+<button class="primary" onclick="saveTerritory44()">Salvar território</button>
+<button class="secondary" onclick="closeModal('territoryFormModal44')">Cancelar</button></div></div>
 <div class="modalWrap" id="territoryInfoModal44" onclick="modalBg(event,'territoryInfoModal44')"><div class="modal"><div class="handle"></div><div id="territoryInfoContent44"></div><button class="secondary" onclick="closeModal('territoryInfoModal44')">Fechar</button></div></div>
 <div class="modalWrap" id="suggestionModal44" onclick="modalBg(event,'suggestionModal44')"><div class="modal"><div class="handle"></div><h3>Sugerir alteração</h3><div class="notice">A sugestão não altera o território automaticamente. O responsável receberá uma notificação e decidirá o que fazer.</div><label class="field">Sua sugestão<textarea id="suggestionText44" placeholder="Explique o que você sugere alterar"></textarea></label><div id="suggestionGeometrySummary44" class="suggestPreview44">Sem nova área desenhada.</div><label class="field">Formato da nova área<select id="suggestionMode44"><option value="rectangle">Retângulo</option><option value="polygon">Área livre</option></select></label><button class="secondary" onclick="beginSuggestionGeometry44()">✏️ Desenhar nova área proposta</button><button class="primary" onclick="submitSuggestion44()">Enviar sugestão</button><button class="secondary" onclick="closeModal('suggestionModal44')">Cancelar</button></div></div>
 <div class="modalWrap" id="notificationsModal44" onclick="modalBg(event,'notificationsModal44')"><div class="modal"><div class="handle"></div><h3>Notificações</h3><div id="notificationsList44"></div><button class="secondary" onclick="closeModal('notificationsModal44')">Fechar</button></div></div>
@@ -481,6 +525,24 @@ window.addEventListener('load',()=>{renderPeople();renderPlaces();renderMapSetti
 // ===== HOGHSMITH 4.4 UI / MAP CONTROLLER =====
 window.territories44=[];window.suggestions44=[];window.notifications44=[];window.trash44=[];
 const state44={territories:true,guided:null,guidedLine:null,territoryDraft:null,territoryGeometry:null,suggestionTarget:null,suggestionGeometry:null,suggestionDrawing:false,trashAdmin:false};
+function applyTerritoryCoords45(){
+ let x1,z1,x2,z2;
+ try{
+   x1=parseCoord451(document.getElementById('terrX145').value,'Canto 1 X');
+   z1=parseCoord451(document.getElementById('terrZ145').value,'Canto 1 Z');
+   x2=parseCoord451(document.getElementById('terrX245').value,'Canto 2 X');
+   z2=parseCoord451(document.getElementById('terrZ245').value,'Canto 2 Z')
+ }catch(e){return alert(e.message)}
+ if(x1===x2||z1===z2)return alert('Os dois cantos precisam formar um retângulo com largura e altura.');
+ const minX=Math.min(x1,x2),maxX=Math.max(x1,x2),minZ=Math.min(z1,z2),maxZ=Math.max(z1,z2);
+ state44.territoryGeometry={mode:'rectangle',points:[
+   {x:minX,z:minZ},{x:maxX,z:minZ},{x:maxX,z:maxZ},{x:minX,z:maxZ}
+ ]};
+ updateTerritorySummary44();
+ renderSeedMap(false)
+}
+window.applyTerritoryCoords45=applyTerritoryCoords45;
+
 function polygonArea44(points){let a=0;if(!points||points.length<3)return 0;for(let i=0,j=points.length-1;i<points.length;j=i++)a+=(points[j].x+points[i].x)*(points[j].z-points[i].z);return Math.abs(a/2)}
 function rectPoints44(a,b){return [{x:Math.min(a.x,b.x),z:Math.min(a.z,b.z)},{x:Math.max(a.x,b.x),z:Math.min(a.z,b.z)},{x:Math.max(a.x,b.x),z:Math.max(a.z,b.z)},{x:Math.min(a.x,b.x),z:Math.max(a.z,b.z)}]}
 function bbox44(points){const xs=points.map(p=>p.x),zs=points.map(p=>p.z);return {minX:Math.min(...xs),maxX:Math.max(...xs),minZ:Math.min(...zs),maxZ:Math.max(...zs)}}
@@ -502,11 +564,65 @@ const _selectMapPoint44=selectMapPoint;selectMapPoint=function(x,z){if(state44.t
 const _selectExisting44=selectExistingPlace;selectExistingPlace=function(pl){if(state44.guided&&guidedPick44(Number(pl.x)||0,Number(pl.z)||0,pl.name))return;_selectExisting44(pl)};
 const _selectStructure44=selectStructure;selectStructure=function(st){if(state44.guided&&guidedPick44(st.x,st.z,niceStructName(st.name)))return;_selectStructure44(st)};
 function openTerritories44(){renderTerritoriesLists44();territoriesModal44.classList.add('show')}window.openTerritories44=openTerritories44;
-function openTerritoryForm44(id=''){const t=(window.territories44||[]).find(x=>x.id===id);territoryEditId44.value=t?.id||'';territoryFormTitle44.textContent=t?'Editar território':'Novo território';territoryName44.value=t?.name||'';territoryType44.value=t?.type||'Terreno residencial';territoryPassage44.value=t?.passage||'allowed';territoryColor44.value=t?.color||'#5d9f63';territoryDescription44.value=t?.description||'';territoryMode44.value=t?.geometry?.mode||'rectangle';state44.territoryGeometry=t?.geometry?JSON.parse(JSON.stringify(t.geometry)):null;updateTerritorySummary44();territoryFormModal44.classList.add('show')}window.openTerritoryForm44=openTerritoryForm44;
-function beginTerritoryFromForm44(){closeModal('territoryFormModal44');state44.suggestionDrawing=false;state44.territoryDraft={mode:territoryMode44.value,points:[]};territoryEditorBar44.classList.add('show');territoryEditorTitle44.textContent=state44.territoryDraft.mode==='rectangle'?'Selecione dois cantos':'Desenhe a área livre';territoryEditorInfo44.textContent=state44.territoryDraft.mode==='rectangle'?'Toque no primeiro canto.':'Toque nos vértices do território e conclua quando terminar.';finishTerritoryBtn44.style.display=state44.territoryDraft.mode==='polygon'?'block':'none';go('map');renderSeedMap(false)}window.beginTerritoryFromForm44=beginTerritoryFromForm44;
-function territoryPick44(x,z){const d=state44.territoryDraft;if(!d)return;d.points.push({x:Math.round(x),z:Math.round(z)});if(d.mode==='rectangle'){if(d.points.length===1){territoryEditorInfo44.textContent=`Primeiro canto: X ${d.points[0].x} Z ${d.points[0].z}. Agora toque no canto oposto.`}else{d.points=rectPoints44(d.points[0],d.points[1]);finishTerritorySelection44();return}}else territoryEditorInfo44.textContent=`${d.points.length} vértices selecionados.`;renderSeedMap(false)}
+function openTerritoryForm44(id=''){
+ const t=(window.territories44||[]).find(x=>x.id===id);
+ territoryEditId44.value=t?.id||'';
+ territoryFormTitle44.textContent=t?'Editar território':'Novo território';
+ territoryName44.value=t?.name||'';
+ territoryType44.value=t?.type||'Terreno residencial';
+ territoryPassage44.value=t?.passage||'allowed';
+ territoryColor44.value=t?.color||'#5d9f63';
+ territoryDescription44.value=t?.description||'';
+ territoryMode44.value='rectangle';
+ state44.territoryGeometry=t?.geometry?JSON.parse(JSON.stringify(t.geometry)):null;
+ const pts=t?.geometry?.points||[];
+ if(pts.length>=4){
+   const xs=pts.map(p=>Number(p.x)),zs=pts.map(p=>Number(p.z));
+   terrX145.value=Math.min(...xs);terrZ145.value=Math.min(...zs);
+   terrX245.value=Math.max(...xs);terrZ245.value=Math.max(...zs)
+ }else{terrX145.value='';terrZ145.value='';terrX245.value='';terrZ245.value=''}
+ updateTerritorySummary44();
+ territoryFormModal44.classList.add('show')
+}window.openTerritoryForm44=openTerritoryForm44;
+function beginTerritoryFromForm44(){
+ closeModal('territoryFormModal44');
+ state44.suggestionDrawing=false;
+ state44.territoryDraft={mode:'rectangle',points:[]};
+ territoryEditorBar44.classList.add('show');
+ territoryEditorTitle44.textContent='Selecione dois cantos';
+ territoryEditorInfo44.textContent='Toque no primeiro canto do retângulo.';
+ finishTerritoryBtn44.style.display='none';
+ go('map');renderSeedMap(false)
+}window.beginTerritoryFromForm44=beginTerritoryFromForm44;
+function territoryPick44(x,z){
+ const d=state44.territoryDraft;if(!d)return;
+ d.points.push({x:Math.round(x),z:Math.round(z)});
+ if(d.points.length===1){
+   territoryEditorInfo44.textContent=`Primeiro canto: X ${d.points[0].x} • Z ${d.points[0].z}. Agora toque no canto oposto.`;
+ }else{
+   d.points=rectPoints44(d.points[0],d.points[1]);
+   finishTerritorySelection44();return
+ }
+ renderSeedMap(false)
+});if(d.mode==='rectangle'){if(d.points.length===1){territoryEditorInfo44.textContent=`Primeiro canto: X ${d.points[0].x} Z ${d.points[0].z}. Agora toque no canto oposto.`}else{d.points=rectPoints44(d.points[0],d.points[1]);finishTerritorySelection44();return}}else territoryEditorInfo44.textContent=`${d.points.length} vértices selecionados.`;renderSeedMap(false)}
 function undoTerritoryPoint44(){state44.territoryDraft?.points.pop();renderSeedMap(false)}window.undoTerritoryPoint44=undoTerritoryPoint44;
-function finishTerritorySelection44(){const d=state44.territoryDraft;if(!d)return;if(d.mode==='polygon'&&d.points.length<3)return alert('Selecione pelo menos 3 pontos.');const geometry={mode:d.mode,points:d.points.map(p=>({...p}))};state44.territoryDraft=null;territoryEditorBar44.classList.remove('show');if(state44.suggestionDrawing){state44.suggestionGeometry=geometry;state44.suggestionDrawing=false;suggestionGeometrySummary44.textContent='Nova área proposta: '+territoryAreaText44(geometry);suggestionModal44.classList.add('show')}else{state44.territoryGeometry=geometry;updateTerritorySummary44();territoryFormModal44.classList.add('show')}renderSeedMap(false)}window.finishTerritorySelection44=finishTerritorySelection44;
+function finishTerritorySelection44(){
+ const d=state44.territoryDraft;if(!d||d.points.length<4)return;
+ const geometry={mode:'rectangle',points:d.points.map(p=>({...p}))};
+ state44.territoryDraft=null;territoryEditorBar44.classList.remove('show');
+ if(state44.suggestionDrawing){
+   state44.suggestionGeometry=geometry;state44.suggestionDrawing=false;
+   suggestionGeometrySummary44.textContent='Nova área proposta: '+territoryAreaText44(geometry);
+   suggestionModal44.classList.add('show')
+ }else{
+   state44.territoryGeometry=geometry;
+   const xs=geometry.points.map(p=>p.x),zs=geometry.points.map(p=>p.z);
+   terrX145.value=Math.min(...xs);terrZ145.value=Math.min(...zs);
+   terrX245.value=Math.max(...xs);terrZ245.value=Math.max(...zs);
+   updateTerritorySummary44();territoryFormModal44.classList.add('show')
+ }
+ renderSeedMap(false)
+}window.finishTerritorySelection44=finishTerritorySelection44;
 function cancelTerritorySelection44(){state44.territoryDraft=null;territoryEditorBar44.classList.remove('show');if(state44.suggestionDrawing){state44.suggestionDrawing=false;suggestionModal44.classList.add('show')}else territoryFormModal44.classList.add('show');renderSeedMap(false)}window.cancelTerritorySelection44=cancelTerritorySelection44;
 function updateTerritorySummary44(){territoryAreaSummary44.textContent=territoryAreaText44(state44.territoryGeometry);const overlaps=(window.territories44||[]).filter(t=>t.id!==territoryEditId44.value&&t.geometry?.points?.length&&state44.territoryGeometry?.points?.length).map(t=>({t,a:overlapArea44(t.geometry.points,state44.territoryGeometry.points)})).filter(x=>x.a>0);territoryOverlap44.innerHTML=overlaps.length?`<div class="overlapWarn44">Esta área se sobrepõe a ${overlaps.map(x=>`${esc(x.t.name)} (~${Math.round(x.a)} blocos²)`).join(', ')}. A sobreposição é permitida.</div>`:''}
 function renderTerritoriesLists44(){const arr=window.territories44||[];territoryCount44.textContent=`${arr.length} cadastrado${arr.length===1?'':'s'}`;const html=arr.length?arr.map(territoryCard44).join(''):'<div class="empty">Nenhum território cadastrado.</div>';territoryList44.innerHTML=html;territoryCityList44.innerHTML=html;if(window.activeUser?.role==='admin')adminTerritories44.innerHTML=html}
