@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#182118" />
-<title>Painel de Hoghsmith — HOG.25.09#4.5.2</title>
+<title>Painel de Hoghsmith — HOG.25.09#4.5.3</title>
 <style>
 :root{--bg:#0f1510;--surface:#151d16;--surface2:#1b261c;--surface3:#223024;--text:#f2f6f0;--muted:#aab5aa;--green:#8bcf6a;--lime:#b5df77;--line:#2c3a2d;--danger:#e07c77;--gold:#d9c46c;--shadow:0 18px 50px rgba(0,0,0,.28);--radius:24px}
 *{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 50% -15%,#223025 0,#0f1510 38%,#0b100c 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh;display:flex;justify-content:center}.app{width:100%;max-width:520px;min-height:100vh;background:rgba(9,13,10,.35);position:relative;overflow:hidden}
@@ -69,7 +69,7 @@ main{padding:8px 14px 104px}.hero{padding:16px 2px 10px}.hero h2{font-size:27px}
 <body>
 <div class="loginGate" id="loginGate"><div class="loginCard"><div class="loginLogo">🟩</div><div class="eyebrow">PAINEL DE HOGHSMITH</div><h2>Entrar na cidade</h2><p>Use sua conta individual. O painel carrega somente os dados reais sincronizados no Firebase.</p><label class="field">E-mail<input id="loginEmail" type="email" autocomplete="email" placeholder="Perfil.carlos@gmail.com"></label><label class="field">Senha<input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••"></label><button class="primary" id="loginBtn">Entrar</button><div class="loginStatus" id="loginStatus"></div></div></div>
 <div class="app">
-<header class="topbar"><div class="brandline"><div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div><div class="version">HOG.25.09#4.5.2</div></div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="notifBtn" class="notifBtn" onclick="openNotifications44()">🔔 <span id="notifCount44">0</span></button><button id="logoutBtn">Sair</button></div></header>
+<header class="topbar"><div class="brandline"><div class="brand"><div class="cube">🟩</div><div><h1>HOGHSMITH</h1><small>Painel da cidade</small></div></div><div class="version">HOG.25.09#4.5.3</div></div><div class="accountBar"><span class="syncdot" id="syncDot"></span><small id="accountLabel" style="color:var(--muted)">Firebase desconectado</small><button id="notifBtn" class="notifBtn" onclick="openNotifications44()">🔔 <span id="notifCount44">0</span></button><button id="logoutBtn">Sair</button></div></header>
 <main>
 <section class="page active" id="home"><div class="hero"><div class="eyebrow">Realm Bedrock • Base real</div><h2>Boa noite, <span id="homeName">morador</span>.</h2><p>Nesta versão, o painel mostra somente o que existe de verdade no banco.</p></div>
 <div class="centerCard"><div class="eyebrow">Centro oficial de Hoghsmith</div><div class="coords" id="homeCoords">X 139 • Z -32</div><div class="subcoords" id="homeAltitude">Altitude de referência: Y 104</div></div>
@@ -369,7 +369,21 @@ loginBtn.addEventListener('click',async()=>{status.textContent='Entrando…';try
 async function ensurePlayerDoc(user,profile){const ref=doc(db,'players',user.uid),snap=await getDoc(ref);if(!snap.exists()){await setDoc(ref,{name:profile.name,email:user.email,role:profile.role,civicTitle:profile.civicTitle||'',avatar:[...DEFAULT_AVATAR],createdAt:serverTimestamp(),updatedAt:serverTimestamp()})}else{const d=snap.data();const patch={name:profile.name,email:user.email,role:profile.role,updatedAt:serverTimestamp()};if(profile.civicTitle&&!d.civicTitle)patch.civicTitle=profile.civicTitle;if(!Array.isArray(d.avatar)||d.avatar.length!==64)patch.avatar=[...DEFAULT_AVATAR];await setDoc(ref,patch,{merge:true})}}
 async function loadMapSettings(){const ref=doc(db,'settings','map'),snap=await getDoc(ref);if(snap.exists())mapSettings={...DEFAULT_MAP,...snap.data()};else mapSettings={...DEFAULT_MAP};renderMapSettings()}
 onAuthStateChanged(auth,async user=>{if(!user){activeUser=null;window.activeUser=null;adminSection.classList.remove('show');gate.classList.remove('hidden');setSync(false,'Firebase desconectado');return}const email=(user.email||'').toLowerCase();const resident=RESIDENTS.find(r=>r.email===email);if(!resident){await signOut(auth);status.textContent='Esta conta não está vinculada a um morador de Hoghsmith.';return}const role=email==='perfil.carlos@gmail.com'?'admin':'member';activeUser={uid:user.uid,email,name:resident.name,role};window.activeUser=activeUser;gate.classList.add('hidden');adminSection.classList.toggle('show',role==='admin');homeName.textContent=resident.name;profileName.textContent=resident.name;profileSub.textContent=resident.civicTitle?`${resident.civicTitle} de Hoghsmith`:'Morador de Hoghsmith';setSync(true,`${resident.name} • sincronizado`);await ensurePlayerDoc(user,{name:resident.name,role,civicTitle:resident.civicTitle||''});const ps=await getDoc(doc(db,'players',user.uid));avatar=Array.isArray(ps.data()?.avatar)&&ps.data().avatar.length===64?[...ps.data().avatar]:[...DEFAULT_AVATAR];drawAvatar(document.getElementById('profileAvatar'),avatar);playersByEmail[email]={...(playersByEmail[email]||{}),id:user.uid,...(ps.data()||{}),email:user.email,name:resident.name,avatar:[...avatar]};renderPeople();await loadMapSettings();
-if(unsubPlaces)unsubPlaces();unsubPlaces=onSnapshot(collection(db,'locations'),qs=>{places=[];qs.forEach(d=>places.push({id:d.id,...d.data()}));renderPlaces()},()=>setSync(false,`${resident.name} • erro em locais`));
+if(unsubPlaces)unsubPlaces();
+try{
+  const cached=JSON.parse(localStorage.getItem('hoghsmith_locations_backup_v453')||'[]');
+  if(Array.isArray(cached)&&cached.length&&!places.length){places=cached;renderPlaces()}
+}catch(e){}
+unsubPlaces=onSnapshot(collection(db,'locations'),{includeMetadataChanges:true},qs=>{
+  const remote=[];qs.forEach(d=>remote.push({id:d.id,...d.data()}));
+  places=remote;
+  try{localStorage.setItem('hoghsmith_locations_backup_v453',JSON.stringify(remote))}catch(e){}
+  renderPlaces();
+  setSync(true,`${resident.name} • Firebase sincronizado • ${remote.length} local${remote.length===1?'':'ais'}`);
+},err=>{
+  console.error('locations snapshot',err);
+  setSync(false,`${resident.name} • erro ao sincronizar locais`);
+});
 if(unsubPlayers)unsubPlayers();unsubPlayers=onSnapshot(collection(db,'players'),qs=>{playersByEmail={};qs.forEach(d=>{const v=d.data();const key=String(v.email||'').toLowerCase();if(key)playersByEmail[key]={id:d.id,...v}});const me=playersByEmail[email];if(me&&Array.isArray(me.avatar)&&me.avatar.length===64){avatar=[...me.avatar];drawAvatar(document.getElementById('profileAvatar'),avatar)}renderPeople()},err=>{console.warn('players snapshot',err);renderPeople()});
 if(unsubCats)unsubCats();unsubCats=onSnapshot(collection(db,'categories'),qs=>{const arr=[];qs.forEach(d=>arr.push({id:d.id,...d.data()}));window.categoriesFromFirebase=arr.length>0;categories=arr.length?arr:[...DEFAULT_CATEGORIES];refreshCategorySelect();renderCategoriesAdmin()},()=>{});
 if(unsubProjects)unsubProjects();unsubProjects=onSnapshot(collection(db,'projects'),qs=>{statProjects.textContent=qs.size},()=>{statProjects.textContent='0'});
@@ -390,7 +404,7 @@ window.savePlace=async function(){
    await setDoc(doc(db,'locations',id),item);
    if(!places.some(p=>p.id===id)){places.push({id,...item});renderPlaces()}
    ['pName','pX','pY','pZ','pDescription'].forEach(k=>$(k).value='');
-   if(state){state.textContent='Local salvo.';state.className='saveState451 ok'}
+   if(state){state.textContent='Local salvo e confirmado no Firebase.';state.className='saveState451 ok'}
    setTimeout(()=>closeModal('placeModal'),220);
  }catch(e){
    console.error('savePlace',e);
@@ -433,60 +447,13 @@ window.deleteExistingPlace=async function(id){const pl=places.find(p=>p.id===id)
 
 </script>
 
-<script type="module">
-import { getApps, getApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, deleteDoc, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-const app44=getApps().length?getApp():null,auth44=getAuth(app44),db44=getFirestore(app44);let uTerr=null,uSug=null,uNotif=null,uTrash=null;
-const sevenDays=7*24*60*60*1000;
-function cleanPayload44(v){const out={};for(const [k,val] of Object.entries(v||{})){if(k==='id')continue;out[k]=val}return out}
-async function moveToTrash44(sourceCollection,id,item,itemType,itemName){const user=window.activeUser;if(!user)return;if(!confirm(`Mover “${itemName}” para a lixeira?
-
-Você terá 7 dias para restaurar. Após 7 dias, o sistema excluirá permanentemente de forma automática.`))return;const tid='trash-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);await setDoc(doc(db44,'trash',tid),{sourceCollection,sourceId:id,itemType,itemTypeLabel:itemType,itemName,payload:cleanPayload44(item),deletedByUid:user.uid,deletedByName:user.name,deletedAt:Date.now(),expiresAt:Date.now()+sevenDays});await deleteDoc(doc(db44,sourceCollection,id))}
-window.trashTerritory44=async id=>{const t=(window.territories44||[]).find(x=>x.id===id);if(!t||!window.activeUser||(t.ownerUid!==window.activeUser.uid&&window.activeUser.role!=='admin'))return;try{await moveToTrash44('territories',id,t,'Território',t.name);closeModal('territoryInfoModal44')}catch(e){alert('Não foi possível mover para a lixeira.')}};
-window.deleteExistingPlace=async id=>{const p=(window.places||places||[]).find(x=>x.id===id);if(!p||!window.activeUser||(p.ownerUid!==window.activeUser.uid&&window.activeUser.role!=='admin'))return alert('Você não pode remover este local.');try{await moveToTrash44('locations',id,p,'Local',p.name);closeTapCard()}catch(e){alert('Não foi possível mover para a lixeira.')}};
-window.deleteRoute=async id=>{const r=(window.routes||routes||[]).find(x=>x.id===id);if(!r||!window.activeUser||(r.ownerUid!==window.activeUser.uid&&window.activeUser.role!=='admin'))return;try{await moveToTrash44('routes',id,r,'Rota',r.name)}catch(e){alert('Não foi possível mover para a lixeira.')}};
-window.deleteCategory=async id=>{const c=(window.categories||categories||[]).find(x=>x.id===id);if(!c||window.activeUser?.role!=='admin')return;const used=(window.places||places||[]).some(p=>(p.type||p.categoryId)===id);if(used)return alert('Esta categoria está sendo usada. Desative-a em vez de remover.');try{await moveToTrash44('categories',id,c,'Categoria',c.name)}catch(e){alert('Não foi possível mover para a lixeira.')}};
-window.saveTerritory44=async()=>{const user=window.activeUser;if(!user)return alert('Faça login primeiro.');const $=id=>document.getElementById(id),id=$('territoryEditId44').value||('t'+Date.now()),existing=(window.territories44||[]).find(t=>t.id===id);if(existing&&existing.ownerUid!==user.uid&&user.role!=='admin')return alert('Você não pode editar este território.');const name=$('territoryName44').value.trim();if(!name)return alert('Digite um nome para o território.');if($('territoryMode44').value==='coordinates'&&!state44.territoryGeometry?.points?.length)applyTerritoryCoords45();if(!state44.territoryGeometry?.points?.length)return alert('Selecione a área no mapa ou informe as coordenadas.');const item={name,type:$('territoryType44').value,passage:$('territoryPassage44').value,color:$('territoryColor44').value,description:$('territoryDescription44').value.trim(),geometry:state44.territoryGeometry,ownerUid:existing?.ownerUid||user.uid,ownerName:existing?.ownerName||user.name,createdAt:existing?.createdAt||Date.now(),updatedAt:Date.now()};try{await setDoc(doc(db44,'territories',id),item,{merge:true});if(!(window.territories44||[]).some(t=>t.id===id)){window.territories44=[...(window.territories44||[]),{id,...item}];renderTerritoriesLists44();renderSeedMap(false)}closeModal('territoryFormModal44');state44.territoryGeometry=null;alert('Território salvo.')}catch(e){console.error('saveTerritory44',e);alert('Não foi possível salvar o território no Firebase. '+(e?.code?`Código: ${e.code}`:''))}};
-window.submitSuggestion44=async()=>{const user=window.activeUser,t=state44.suggestionTarget;if(!user||!t)return;if(!suggestionText44.value.trim()&&!state44.suggestionGeometry)return alert('Escreva uma sugestão ou desenhe uma nova área.');const id='s'+Date.now();const sug={territoryId:t.id,territoryName:t.name,ownerUid:t.ownerUid,ownerName:t.ownerName,proposerUid:user.uid,proposerName:user.name,message:suggestionText44.value.trim(),proposedGeometry:state44.suggestionGeometry||null,status:'pending',createdAt:Date.now()};try{await setDoc(doc(db44,'territorySuggestions',id),sug);await setDoc(doc(db44,'notifications','n'+Date.now()),{recipientUid:t.ownerUid,title:'Sugestão de alteração em território',message:`${user.name} sugeriu uma alteração em “${t.name}”.`,suggestionId:id,read:false,createdAt:Date.now()});closeModal('suggestionModal44');alert('Sugestão enviada.')}catch(e){alert('Erro ao enviar sugestão.')}};
-window.acceptSuggestion44=async id=>{const s=(window.suggestions44||[]).find(x=>x.id===id),t=(window.territories44||[]).find(x=>x.id===s?.territoryId),user=window.activeUser;if(!s||!t||!user||(t.ownerUid!==user.uid&&user.role!=='admin'))return;try{if(s.proposedGeometry)await setDoc(doc(db44,'territories',t.id),{geometry:s.proposedGeometry,updatedAt:Date.now()},{merge:true});await setDoc(doc(db44,'territorySuggestions',id),{status:'accepted',resolvedAt:Date.now(),resolvedByUid:user.uid},{merge:true});await setDoc(doc(db44,'notifications','n'+Date.now()),{recipientUid:s.proposerUid,title:'Sugestão aceita',message:`${user.name} aceitou sua sugestão para “${s.territoryName}”.`,read:false,createdAt:Date.now()});closeModal('territoryInfoModal44')}catch(e){alert('Erro ao aceitar sugestão.')}};
-window.rejectSuggestion44=async id=>{const s=(window.suggestions44||[]).find(x=>x.id===id),t=(window.territories44||[]).find(x=>x.id===s?.territoryId),user=window.activeUser;if(!s||!t||!user||(t.ownerUid!==user.uid&&user.role!=='admin'))return;try{await setDoc(doc(db44,'territorySuggestions',id),{status:'rejected',resolvedAt:Date.now(),resolvedByUid:user.uid},{merge:true});await setDoc(doc(db44,'notifications','n'+Date.now()),{recipientUid:s.proposerUid,title:'Sugestão recusada',message:`${user.name} recusou sua sugestão para “${s.territoryName}”.`,read:false,createdAt:Date.now()});closeModal('territoryInfoModal44')}catch(e){alert('Erro ao recusar sugestão.')}};
-window.restoreTrash44=async id=>{const x=(window.trash44||[]).find(v=>v.id===id),user=window.activeUser;if(!x||!user||(x.deletedByUid!==user.uid&&user.role!=='admin'))return;if(!confirm(`Restaurar “${x.itemName}”?`))return;try{await setDoc(doc(db44,x.sourceCollection,x.sourceId),x.payload||{});await deleteDoc(doc(db44,'trash',id))}catch(e){alert('Erro ao restaurar.')}};
-window.permanentDeleteTrash44=async id=>{const x=(window.trash44||[]).find(v=>v.id===id),user=window.activeUser;if(!x||!user||(x.deletedByUid!==user.uid&&user.role!=='admin'))return;if(!confirm(`Excluir “${x.itemName}” permanentemente? Esta ação não pode ser desfeita.`))return;try{await deleteDoc(doc(db44,'trash',id))}catch(e){alert('Erro ao excluir permanentemente.')}};
-window.markNotificationsRead44=async()=>{const uid=window.activeUser?.uid;if(!uid)return;for(const n of (window.notifications44||[]).filter(n=>n.recipientUid===uid&&!n.read)){try{await setDoc(doc(db44,'notifications',n.id),{read:true,readAt:Date.now()},{merge:true})}catch(e){}}};
-window.saveOfficialGuidedRoute44=async g=>{const user=window.activeUser;if(!user||user.role!=='admin')return;const name=prompt('Nome da rota oficial:',`${g.origin.label} → ${g.dest.label}`);if(name===null)return;const id='r'+Date.now();try{await setDoc(doc(db44,'routes',id),{name:name.trim()||'Rota oficial',category:'Caminho',color:'#8bcf6a',points:[{x:g.origin.x,z:g.origin.z},{x:g.dest.x,z:g.dest.z}],ownerUid:user.uid,ownerName:user.name,official:true,visibility:'public',publishedByUid:user.uid,publishedByName:user.name,publishedByTitle:'Prefeito',publishedAt:Date.now(),createdAt:Date.now(),updatedAt:Date.now()});closeModal('routeGuideResultModal44')}catch(e){alert('Erro ao publicar rota.')}};
-async function purgeExpired44(items){const now=Date.now();for(const x of items){const ms=Number(x.expiresAt)-now;if(ms<=0){try{await deleteDoc(doc(db44,'trash',x.id))}catch(e){}}else if(ms<2147483647){setTimeout(async()=>{try{await deleteDoc(doc(db44,'trash',x.id))}catch(e){}},ms+250)}}}
-onAuthStateChanged(auth44,user=>{if(!user){window.territories44=[];window.suggestions44=[];window.notifications44=[];window.trash44=[];return}if(uTerr)uTerr();uTerr=onSnapshot(collection(db44,'territories'),qs=>{window.territories44=[];qs.forEach(d=>window.territories44.push({id:d.id,...d.data()}));renderTerritoriesLists44();renderSeedMap(false)});if(uSug)uSug();uSug=onSnapshot(collection(db44,'territorySuggestions'),qs=>{window.suggestions44=[];qs.forEach(d=>window.suggestions44.push({id:d.id,...d.data()}));if(window.activeUser?.role==='admin'){const p=window.suggestions44.filter(s=>s.status==='pending');adminSuggestions44.innerHTML=p.length?p.map(s=>`<div class="suggestItem44"><b>${esc(s.territoryName)}</b><div class="territoryMeta44">${esc(s.proposerName)} → ${esc(s.ownerName)} • ${esc(s.message||'alteração de área')}</div><div class="territoryActions44"><button onclick="reviewSuggestion44('${s.id}')">Abrir sugestão</button></div></div>`).join(''):'<div class="empty">Nenhuma sugestão pendente.</div>'}});if(uNotif)uNotif();uNotif=onSnapshot(collection(db44,'notifications'),qs=>{window.notifications44=[];qs.forEach(d=>window.notifications44.push({id:d.id,...d.data()}));renderNotifications44()});if(uTrash)uTrash();uTrash=onSnapshot(collection(db44,'trash'),qs=>{window.trash44=[];qs.forEach(d=>window.trash44.push({id:d.id,...d.data()}));purgeExpired44(window.trash44);renderTrash44()})});
-</script>
-
 
 <script>
-function openLayers45(){document.getElementById('layersModal45').classList.add('show')}
-function setLayer45(kind,on){
- if(kind==='places') seedViewState.places=on;
- if(kind==='routes') seedViewState.routes=on;
- if(kind==='community') seedViewState.communityRoutes=on;
- if(kind==='territories') state44.territoriesVisible=on;
- if(kind==='structures'){seedViewState.structures=on;if(on)scheduleStructureScan();else{seedViewState.structureData=[];seedViewState.structureKey=''}}
- if(kind==='chunks') seedViewState.chunks=on;
- renderSeedMap(false)
-}
-function openMapSearch45(){document.getElementById('searchModal45').classList.add('show');setTimeout(()=>document.getElementById('mapSearch45').focus(),120)}
-function runMapSearch45(){const v=document.getElementById('mapSearch45').value.trim();document.getElementById('mapSearch').value=v;closeModal('searchModal45');runMapSearch()}
-function openTerritoryAtTap45(){const p=seedViewState.selected;if(!p)return;closeTapCard();openTerritoryForm44();setTimeout(()=>{territoryMode44.value='coordinates';toggleTerritoryCoords45();terrX145.value=Math.round(p.x);terrZ145.value=Math.round(p.z)},80)}
-function toggleTerritoryCoords45(){const mode=territoryMode44.value,box=document.getElementById('territoryCoords45'),btn=document.getElementById('selectTerritoryMapBtn45');if(box)box.style.display=mode==='coordinates'?'block':'none';if(btn)btn.style.display=mode==='coordinates'?'none':'block'}
-function applyTerritoryCoords45(){let x1,z1,x2,z2;try{x1=parseCoord451(document.getElementById('terrX145').value,'Canto 1 X');z1=parseCoord451(document.getElementById('terrZ145').value,'Canto 1 Z');x2=parseCoord451(document.getElementById('terrX245').value,'Canto 2 X');z2=parseCoord451(document.getElementById('terrZ245').value,'Canto 2 Z')}catch(e){return alert(e.message)}state44.territoryGeometry={mode:'rectangle',points:[{x:x1,z:z1},{x:x2,z:z1},{x:x2,z:z2},{x:x1,z:z2}]};updateTerritorySummary44();renderSeedMap(false)}
-const _openTerritoryForm45=window.openTerritoryForm44;window.openTerritoryForm44=function(id=''){_openTerritoryForm45(id);setTimeout(()=>toggleTerritoryCoords45(),0)};
-const _beginTerr45=window.beginTerritoryFromForm44;window.beginTerritoryFromForm44=function(){if(territoryMode44.value==='coordinates')return applyTerritoryCoords45();_beginTerr45()};
+/* 4.5.3 HOTFIX
+   Regra de segurança: o aplicativo nunca apaga registros do Firebase automaticamente
+   por nome, ID de demonstração ou troca de versão. Exclusões só podem ocorrer por
+   ação explícita do usuário (lixeira/exclusão permanente). */
+window.HOG_NO_AUTOMATIC_FIREBASE_DELETIONS = true;
 </script>
 
-<script type="module">
-import { getApps, getApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-const app45=getApps().length?getApp():null,auth45=getAuth(app45),db45=getFirestore(app45);
-const fakeIds45=new Set(['casa-carlos','estacao-central','farm-ferro','vila-oeste','portal-centro']);
-const fakeNames45=new Set(['Casa de Carlos','Estação Central','Farm de Ferro','Vila Oeste','Portal Central']);
-onAuthStateChanged(auth45,async user=>{if(!user)return;try{const flag=doc(db45,'settings','migration-4-5-2-clean');const fsnap=await getDoc(flag);if(fsnap.exists())return;const qs=await getDocs(collection(db45,'locations'));for(const d of qs.docs){const v=d.data();if(fakeIds45.has(d.id)||fakeNames45.has(v.name))await deleteDoc(doc(db45,'locations',d.id));}await setDoc(flag,{done:true,at:Date.now(),note:'Removeu apenas registros demonstrativos conhecidos das versões iniciais.'});}catch(e){console.warn('Limpeza 4.5 não concluída',e)}});
-</script>
 </body></html>
